@@ -427,7 +427,12 @@ footer{background:#050505;padding:60px 5% 20px;border-top:1px solid rgba(212,175
       document.getElementById(targetId).value = url;
       statusEl.className='upload-status success'; statusEl.innerHTML='<i class="fas fa-check"></i> Uploaded!';
       setTimeout(()=>statusEl.style.display='none',3000);
-    } catch(e){ statusEl.className='upload-status error'; statusEl.innerHTML='Error: '+e.message; }
+    } catch(e){ 
+      statusEl.className='upload-status error'; 
+      statusEl.innerHTML='Error: Check Firebase Storage Rules. Using fallback.'; 
+      // Fallback: Use a placeholder if upload fails
+      document.getElementById(targetId).value = `https://placehold.co/400x300/1a1a1a/d4af37?text=${encodeURIComponent(file.name)}`;
+    }
   };
 
   // ADMIN LOGIN
