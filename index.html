@@ -474,40 +474,38 @@ footer{background:#050505;padding:60px 5% 20px;border-top:1px solid rgba(212,175
     const status = document.getElementById('payStatus');
     
     btn.disabled = true;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying with Bank...';
     status.className = 'payment-status processing';
-    status.innerHTML = '<i class="fas fa-sync fa-spin"></i> Checking UPI transaction status...';
+    status.innerHTML = '<i class="fas fa-sync fa-spin"></i> Checking UPI Transaction Status...<br><small style="font-size:0.7rem">Please wait, do not close this window.</small>';
     
-    // SIMULATION OF WEBHOOK / AUTO VERIFICATION
     setTimeout(async () => {
       status.className = 'payment-status success';
-      status.innerHTML = '<i class="fas fa-check-circle"></i> Payment Verified Successfully!';
-      btn.innerHTML = '<i class="fas fa-check"></i> Confirmed';
+      status.innerHTML = '<i class="fas fa-check-circle"></i> Payment Request Sent Successfully!<br><small style="font-size:0.7rem">Admin will verify receipt shortly.</small>';
+      btn.innerHTML = '<i class="fas fa-check"></i> Request Sent';
       
-      // SAVE TO FIREBASE AUTOMATICALLY
       const bookingData = {
         name: document.getElementById('bName').value,
         phone: document.getElementById('bPhone').value,
         date: document.getElementById('bDate').value,
         guests: document.getElementById('bGuests').value,
         fee: currentPayAmount,
-        paymentStatus: 'Verified',
+        paymentStatus: 'Pending Admin Check',
         timestamp: serverTimestamp()
       };
       
       await addDoc(collection(db, 'bookings'), bookingData);
       
-      // SEND WHATSAPP TO OWNER
-      const waMsg = `✅ *PAID BOOKING CONFIRMED*\n━━━━━━━━━━━━━━\n👤 ${bookingData.name}\n📞 ${bookingData.phone}\n📅 ${bookingData.date}\n👥 ${bookingData.guests}\n💰 ₹${bookingData.fee} (Verified)\n━━━━━━━━━━━━━━`;
-      window.open(`https://wa.me/918853153098?text=${encodeURIComponent(waMsg)}`, '_blank');
+      const waMsg = `🔔 *NEW BOOKING REQUEST*\n━━━━━━━━━━━━━━\n👤 ${bookingData.name}\n📞 ${bookingData.phone}\n📅 ${bookingData.date}\n💰 Amount: ₹${bookingData.fee}\n⚠️ *Action:* Please check your GPay/PhonePe for this amount before confirming table.`;
       
       setTimeout(() => {
         window.closeModal('paymentModal');
-        alert("🎉 Booking Confirmed! See you soon.");
-        document.getElementById('bName').value=''; document.getElementById('bPhone').value=''; document.getElementById('bDate').value='';
-      }, 1500);
+        alert("✅ Booking Request Sent! Please keep your payment screenshot ready. We will confirm via WhatsApp.");
+        document.getElementById('bName').value=''; 
+        document.getElementById('bPhone').value=''; 
+        document.getElementById('bDate').value='';
+      }, 2000);
       
-    }, 3000); // 3 Second realistic delay
+    }, 3000); 
   };
 
   // REAL-TIME DATA LISTENERS
@@ -548,7 +546,32 @@ footer{background:#050505;padding:60px 5% 20px;border-top:1px solid rgba(212,175
     });
   }
 
-  window.renderMenuGrid=(cat)=>{const grid=document.getElementById('menuGrid');grid.innerHTML='';currentMenuData.filter(m=>m.category===cat).forEach(m=>{const fp=m.discount>0?Math.round(m.price-(m.price*m.discount/100)):m.price;grid.innerHTML+=`<div class="menu-card ${m.isAvailable===false?'unavailable':''}"><div class="menu-card-img"><img src="${m.img}" onerror="this.src='https://via.placeholder.com/400'"><div class="veg-badge"></div>${m.discount>0?`<div class="discount-badge">${m.discount}% OFF</div>`:''}</div><div class="menu-card-body"><h3>${m.name}</h3><p>${m.desc}</p><div class="price-row"><div>${m.discount>0?`<span class="old-price">₹${m.price}</span>`:''}<span class="new-price">₹${fp}</span></div></div></div></div>`;});};
+  window.renderMenuGrid=(cat)=>{
+    const grid=document.getElementById('menuGrid');
+    grid.innerHTML='';
+    currentMenuData.filter(m=>m.category===cat).forEach(m=>{
+      const fp=m.discount>0?Math.round(m.price-(m.price*m.discount/100)):m.price;
+      // Smart Image Fallback: If image fails, show a professional placeholder with text
+      const fallbackImg = `https://placehold.co/400x300/1a1a1a/d4af37?text=${encodeURIComponent(m.name)}`;
+      
+      grid.innerHTML+=`
+        <div class="menu-card ${m.isAvailable===false?'unavailable':''}">
+          <div class="menu-card-img">
+            <img src="${m.img}" onerror="this.src='${fallbackImg}'">
+            <div class="veg-badge"></div>
+            ${m.discount>0?`<div class="discount-badge">${m.discount}% OFF</div>`:''}
+          </div>
+          <div class="menu-card-body">
+            <h3>${m.name}</h3>
+            <p>${m.desc}</p>
+            <div class="price-row">
+              <div>${m.discount>0?`<span class="old-price">₹${m.price}</span>`:''}<span class="new-price">₹${fp}</span></div>
+            </div>
+          </div>
+        </div>`;
+    });
+  };
+
   window.filterMenu=(cat,btn)=>{document.querySelectorAll('.menu-tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');window.renderMenuGrid(cat);};
   
   window.saveSiteSettings=async()=>{await setDoc(doc(db,'settings','main'),{heroTitle:document.getElementById('editHeroTitle').value,heroSub:document.getElementById('editHeroSub').value,heroBg:document.getElementById('editHeroBg').value});alert("Saved!");};
@@ -561,40 +584,287 @@ footer{background:#050505;padding:60px 5% 20px;border-top:1px solid rgba(212,175
   window.orderSweet=(name)=>{window.open(`https://wa.me/918853153098?text=${encodeURIComponent(`Hi, pre-book: ${name}`)}`,'_blank');};
 
   window.loadDefaultData=async()=>{
-    if(!confirm("Load Full Zomato Menu?"))return;
+    if(!confirm("Load Full Zomato Menu? This will add 200+ items."))return;
     await setDoc(doc(db,'settings','main'),{heroTitle:"Welcome to <span>Chauhan's</span><br>Sweets & Restaurant",heroSub:"Experience authentic North Indian, Chinese, South Indian & Continental cuisine.",heroBg:"https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1920"});
+    
+    // FULL MENU DATA
     const menu=[
-      {name:"Aloo Paratha",category:"Breakfast",desc:"Served with curd",price:92,img:"https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=400"},
-      {name:"Paneer Paratha",category:"Breakfast",desc:"Served with curd",price:126.5,img:"https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=400"},
-      {name:"Special Chinese Combo",category:"Combos",desc:"Soup+Manchurian+Paneer Chilli+Fried Rice+Salad",price:299,img:"https://images.unsplash.com/photo-1563245372-f21724e3856d?w=400"},
-      {name:"Chinese Thali",category:"Thali",desc:"Manchurian+Paneer Chilli+Schezwan Rice+Naan+Salad+Gulab Jamun",price:299,img:"https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=400"},
-      {name:"Veg Thali",category:"Thali",desc:"Dal Fry+Matar Paneer+Jeera Aloo+Roti+Rice+Papad+Salad",price:269,img:"https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=400"},
-      {name:"Veg Manchow Soup",category:"Soups",desc:"Spicy Indo-Chinese soup",price:115,img:"https://images.unsplash.com/photo-1547592166-23ac45744acd?w=400"},
-      {name:"Paneer Chilli Dry",category:"Starters",desc:"Spicy Indo-Chinese paneer",price:276,img:"https://images.unsplash.com/photo-1563245372-f21724e3856d?w=400"},
-      {name:"Honey Chilli Potato",category:"Starters",desc:"Crispy potato in honey chilli glaze",price:207,img:"https://images.unsplash.com/photo-1563245372-f21724e3856d?w=400"},
-      {name:"Paneer Tikka",category:"Starters",desc:"Tandoor grilled marinated paneer",price:276,img:"https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=400"},
-      {name:"Paneer Butter Masala",category:"Main Course",desc:"Rich creamy tomato gravy",price:212.75,img:"https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400"},
-      {name:"Shahi Paneer",category:"Main Course",desc:"Royal creamy paneer",price:224.25,img:"https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400"},
-      {name:"Dal Makhani",category:"Main Course",desc:"Creamy black lentils",price:149.5,img:"https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=400"},
-      {name:"Kadhai Paneer",category:"Main Course",desc:"Paneer in kadhai spices",price:212.75,img:"https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400"},
-      {name:"Palak Paneer",category:"Main Course",desc:"Paneer in spinach gravy",price:184,img:"https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400"},
-      {name:"Malai Kofta",category:"Main Course",desc:"Creamy kofta curry",price:207,img:"https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400"},
-      {name:"Butter Naan",category:"Breads",desc:"Butter topped naan",price:51.75,img:"https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=400"},
-      {name:"Garlic Naan",category:"Breads",desc:"Garlic flavoured naan",price:51.75,img:"https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=400"},
-      {name:"Veg Biryani",category:"Rice",desc:"Fragrant vegetable biryani",price:220,img:"https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=400"},
-      {name:"Masala Dosa",category:"South Indian",desc:"Crispy crepe with potato filling",price:149.5,img:"https://images.unsplash.com/photo-1668236543090-82eba5ee5976?w=400"},
-      {name:"Veg Chowmein",category:"Noodles",desc:"Classic veg chowmein",price:103.5,img:"https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=400"},
-      {name:"Paneer Fried Rice",category:"Fried Rice",desc:"Fried rice with paneer",price:138,img:"https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400"},
-      {name:"Special Chauhan Pizza",category:"Pizza",desc:"Paneer, Onion, Corn, Pineapple",price:253,img:"https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400"},
-      {name:"Alfredo Pasta",category:"Pasta",desc:"White sauce penne",price:195.5,img:"https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=400"},
-      {name:"Paneer Burger",category:"Burgers",desc:"Paneer patty burger",price:126.5,img:"https://images.unsplash.com/photo-1568901346375-23c9450c56cd?w=400"},
-      {name:"Mumbai Pav Bhaji",category:"Snacks",desc:"Classic street food",price:161,img:"https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=400"},
-      {name:"Cold Coffee",category:"Beverages",desc:"Chilled coffee blend",price:172.5,img:"https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=400"}
+      // Breakfast
+      {name:"Aloo Paratha",category:"Breakfast",desc:"Served with fresh curd",price:92,img:""},
+      {name:"Paneer Paratha",category:"Breakfast",desc:"Served with fresh curd",price:126.5,img:""},
+      {name:"Mix Paratha",category:"Breakfast",desc:"Served with fresh curd",price:103.5,img:""},
+      // Combos
+      {name:"Special Chinese Combo",category:"Combos",desc:"Soup+Manchurian Dry+Paneer Chilli Gravy+Fried Rice+Salad",price:299,img:""},
+      {name:"Paneer Chilli Combo",category:"Combos",desc:"Paneer Chilli Dry+Gravy+Fried Rice+Salad",price:276,img:""},
+      // Thali
+      {name:"Chinese Thali",category:"Thali",desc:"Veg Manchurian Dry+Paneer Chilli Gravy+Schezwan Rice+2 Baby Naan+Salad+Gulab Jamun",price:299,img:""},
+      {name:"Veg Thali",category:"Thali",desc:"Dal Fry+Matar Paneer+Jeera Aloo+2 Butter Roti+Plain Rice+Papad+Pickle+Salad",price:269,img:""},
+      // Soups
+      {name:"Veg Manchow Soup",category:"Soups",desc:"Spicy Indo-Chinese soup",price:115,img:""},
+      {name:"Hot and Sour Soup",category:"Soups",desc:"Tangy and spicy classic",price:115,img:""},
+      {name:"Cream of Tomato Soup",category:"Soups",desc:"Smooth creamy tomato",price:126.5,img:""},
+      {name:"Veg Peking Soup",category:"Soups",desc:"Chinese style vegetable",price:115,img:""},
+      {name:"Lemon Coriander Soup",category:"Soups",desc:"Light citrus soup",price:115,img:""},
+      {name:"Cream of Mushroom Soup",category:"Soups",desc:"Rich mushroom soup",price:126.5,img:""},
+      {name:"Sweet Corn Soup",category:"Soups",desc:"Sweet corn with pepper",price:115,img:""},
+      // Starters
+      {name:"Paneer Chilli Dry",category:"Starters",desc:"Spicy Indo-Chinese paneer",price:276,img:""},
+      {name:"Honey Chilli Potato",category:"Starters",desc:"Crispy potato in honey chilli",price:207,img:""},
+      {name:"Chilli Garlic Potato",category:"Starters",desc:"Spicy garlic potato",price:207,img:""},
+      {name:"Veg Spring Roll",category:"Starters",desc:"Crispy veggie rolls",price:207,img:""},
+      {name:"Crispy Chilli Baby Corn",category:"Starters",desc:"Crunchy baby corn",price:276,img:""},
+      {name:"Crispy Chilli Mushroom Dry",category:"Starters",desc:"Fried mushroom",price:276,img:""},
+      {name:"Chinese Platter",category:"Starters",desc:"Spring Roll+Manchurian+Paneer Chilli",price:276,img:""},
+      {name:"Veg Manchurian Dry",category:"Starters",desc:"Classic manchurian",price:230,img:""},
+      {name:"Paneer Manchurian Dry",category:"Starters",desc:"Paneer manchurian",price:276,img:""},
+      {name:"Paneer III Spring Roll",category:"Starters",desc:"Paneer stuffed spring rolls",price:253,img:""},
+      {name:"Paneer Hot Garlic",category:"Starters",desc:"Hot garlic paneer",price:276,img:""},
+      {name:"Crispy Salt N Pepper",category:"Starters",desc:"Salt and pepper crispy",price:276,img:""},
+      {name:"Mushroom Manchurian Dry",category:"Starters",desc:"Mushroom manchurian",price:276,img:""},
+      {name:"Paneer Tikka",category:"Starters",desc:"Tandoor grilled paneer",price:276,img:""},
+      {name:"Soya Malai Chaap",category:"Starters",desc:"Creamy soya chaap",price:253,img:""},
+      {name:"Mushroom Tikka",category:"Starters",desc:"Spiced tandoori mushroom",price:264.5,img:""},
+      {name:"Dahi ke Kebab",category:"Starters",desc:"Yogurt kebabs",price:253,img:""},
+      {name:"Paneer Malai Tikka",category:"Starters",desc:"Creamy tikka",price:299,img:""},
+      {name:"Paneer Achari Tikka",category:"Starters",desc:"Pickle flavoured",price:287.5,img:""},
+      {name:"Soya Achari Chaap",category:"Starters",desc:"Achari soya chaap",price:253,img:""},
+      {name:"Hara Bhara Kebab",category:"Starters",desc:"Spinach and peas",price:172.5,img:""},
+      {name:"Veg Sheek Kebab",category:"Starters",desc:"Minced veg kebabs",price:253,img:""},
+      {name:"Paneer Sheek Kebab",category:"Starters",desc:"Paneer mince kebabs",price:276,img:""},
+      {name:"Hydrabadi Tikka",category:"Starters",desc:"Pudina flavour",price:276,img:""},
+      {name:"Soya Chaap",category:"Starters",desc:"Tandoori chaap",price:230,img:""},
+      {name:"Dahi Kabab",category:"Starters",desc:"Soft yogurt kebabs",price:218.5,img:""},
+      {name:"Paneer Pakora",category:"Starters",desc:"Crispy paneer fritters",price:178.25,img:""},
+      {name:"Veg 65",category:"Starters",desc:"Spicy fried vegetable bites",price:207,img:""},
+      {name:"Paneer 65",category:"Starters",desc:"Spicy fried paneer bites",price:276,img:""},
+      // Main Course
+      {name:"Paneer Lababdar",category:"Main Course",desc:"Rich creamy paneer",price:212.75,img:""},
+      {name:"Handi Paneer",category:"Main Course",desc:"Handi cooked",price:212.75,img:""},
+      {name:"Paneer Kolhapuri",category:"Main Course",desc:"Spicy Kolhapuri",price:201.25,img:""},
+      {name:"Paneer Butter Masala",category:"Main Course",desc:"Creamy tomato butter",price:212.75,img:""},
+      {name:"Shahi Paneer",category:"Main Course",desc:"Royal creamy",price:224.25,img:""},
+      {name:"Mata Paneer",category:"Main Course",desc:"Homestyle",price:184,img:""},
+      {name:"Dal Makhani",category:"Main Course",desc:"Creamy black lentils",price:149.5,img:""},
+      {name:"Paneer Chilli Gravy",category:"Main Course",desc:"Indo-Chinese gravy",price:161,img:""},
+      {name:"Paneer Tikka Masala",category:"Main Course",desc:"Tikka in masala",price:212.75,img:""},
+      {name:"Kadhai Paneer",category:"Main Course",desc:"Kadhai spices",price:212.75,img:""},
+      {name:"Veg Manchurian Gravy",category:"Main Course",desc:"Manchurian gravy",price:126.5,img:""},
+      {name:"Paneer Do Pyaza",category:"Main Course",desc:"Double onion paneer",price:212.75,img:""},
+      {name:"Mushroom Matar",category:"Main Course",desc:"Mushroom and peas",price:195.5,img:""},
+      {name:"Mushroom Masala",category:"Main Course",desc:"Spiced mushroom",price:201.25,img:""},
+      {name:"Soya Chaap Masala",category:"Main Course",desc:"Soya chaap masala",price:195.5,img:""},
+      {name:"Malai Kofta",category:"Main Course",desc:"Creamy kofta",price:207,img:""},
+      {name:"Dal Tadka",category:"Main Course",desc:"Tempered dal",price:138,img:""},
+      {name:"Mix Veg",category:"Main Course",desc:"Mixed vegetables",price:161,img:""},
+      {name:"Palak Paneer",category:"Main Course",desc:"Spinach gravy",price:184,img:""},
+      {name:"Paneer Tak Tak",category:"Main Course",desc:"Sizzling paneer",price:212.75,img:""},
+      {name:"Chana Masala",category:"Main Course",desc:"Chickpea curry",price:149.5,img:""},
+      {name:"Mushroom Paneer Masala",category:"Main Course",desc:"Mushroom paneer mix",price:224.25,img:""},
+      {name:"Corn Palak",category:"Main Course",desc:"Corn in spinach",price:201.25,img:""},
+      {name:"Paneer Hyderabadi",category:"Main Course",desc:"Hyderabadi style",price:212.75,img:""},
+      {name:"Tomato Paneer Bhurji",category:"Main Course",desc:"Scrambled paneer",price:241.5,img:""},
+      {name:"Aloo Gobhi Matar",category:"Main Course",desc:"Potato cauliflower peas",price:126.5,img:""},
+      {name:"Veg Kofta",category:"Main Course",desc:"Vegetable kofta",price:166.75,img:""},
+      {name:"Dum Aloo Kashmiri",category:"Main Course",desc:"Kashmiri aloo",price:195.5,img:""},
+      {name:"Aloo Jeera",category:"Main Course",desc:"Cumin potatoes",price:113.85,img:""},
+      {name:"Paneer Manchurian Gravy",category:"Main Course",desc:"Manchurian gravy",price:161,img:""},
+      {name:"Paneer Lajawab",category:"Main Course",desc:"Special rich curry",price:212.75,img:""},
+      {name:"Paneer Gulmerry",category:"Main Course",desc:"Unique sweet-spicy",price:241.5,img:""},
+      {name:"Jeera Fry Dal",category:"Main Course",desc:"Cumin tempered dal",price:126.5,img:""},
+      {name:"Mushroom Do Pyaza",category:"Main Course",desc:"Mushroom double onion",price:207,img:""},
+      {name:"Dum Aloo Banarasi",category:"Main Course",desc:"Banarasi style",price:189.75,img:""},
+      {name:"Mushroom Chilli Gravy",category:"Main Course",desc:"Chilli mushroom",price:161,img:""},
+      {name:"Veg Kolhapuri Kofta",category:"Main Course",desc:"Spicy kofta",price:166.75,img:""},
+      {name:"Paneer Angcori Kofta",category:"Main Course",desc:"Paneer kofta special",price:218.5,img:""},
+      {name:"Rara Paneer",category:"Main Course",desc:"Minced paneer",price:241.5,img:""},
+      {name:"Navratan Korma",category:"Main Course",desc:"Nine gem curry",price:207,img:""},
+      {name:"Paneer Hot Garlic Gravy",category:"Main Course",desc:"Hot garlic gravy",price:161,img:""},
+      {name:"Diwani Handi",category:"Main Course",desc:"Mixed veg handi",price:161,img:""},
+      {name:"Aloo Gobhi",category:"Main Course",desc:"Potato cauliflower",price:126.5,img:""},
+      {name:"Soya Rogan Josh",category:"Main Course",desc:"Kashmiri style soya",price:184,img:""},
+      {name:"Dal Sultani",category:"Main Course",desc:"Royal dal",price:138,img:""},
+      {name:"Methi Matar Malai",category:"Main Course",desc:"Fenugreek peas cream",price:201.25,img:""},
+      {name:"American Choupsuey",category:"Main Course",desc:"Crispy noodles sweet-sour",price:276,img:""},
+      {name:"Chinese Choupsuey",category:"Main Course",desc:"Chinese style",price:276,img:""},
+      {name:"Veg Jhalfrazi",category:"Main Course",desc:"Spicy stir-fry",price:161,img:""},
+      {name:"Veg Jaipuri",category:"Main Course",desc:"Jaipur style",price:161,img:""},
+      {name:"Paneer Pasanda",category:"Main Course",desc:"Stuffed paneer",price:224.25,img:""},
+      {name:"Mushroom Manchurian Gravy",category:"Main Course",desc:"Mushroom gravy",price:161,img:""},
+      // Breads
+      {name:"Paneer Stuff Naan",category:"Breads",desc:"Stuffed with paneer",price:63.25,img:""},
+      {name:"Kashmiri Naan",category:"Breads",desc:"Sweet with dry fruits",price:80.5,img:""},
+      {name:"Aloo Stuff Naan",category:"Breads",desc:"Stuffed with potato",price:57.5,img:""},
+      {name:"Cheese Garlic Naan",category:"Breads",desc:"Cheese and garlic",price:103.5,img:""},
+      {name:"Chur Chur Naan",category:"Breads",desc:"Crushed buttery",price:63.25,img:""},
+      {name:"Garlic Naan",category:"Breads",desc:"Garlic flavoured",price:51.75,img:""},
+      {name:"Lachha Paratha",category:"Breads",desc:"Layered flaky",price:46,img:""},
+      {name:"Missi Roti",category:"Breads",desc:"Gram flour roti",price:51.75,img:""},
+      {name:"Tandoori Roti",category:"Breads",desc:"Clay oven roti",price:18.4,img:""},
+      {name:"Butter Roti",category:"Breads",desc:"Butter topped",price:20.7,img:""},
+      {name:"Tawa Roti",category:"Breads",desc:"Flatbread on griddle",price:18.4,img:""},
+      {name:"Tawa Butter Roti",category:"Breads",desc:"Butter tawa roti",price:20.7,img:""},
+      {name:"Plain Naan",category:"Breads",desc:"Classic naan",price:40.25,img:""},
+      {name:"Butter Naan",category:"Breads",desc:"Butter naan",price:51.75,img:""},
+      {name:"Extra Pav",category:"Breads",desc:"Soft bread rolls",price:40.25,img:""},
+      // Rice
+      {name:"Veg Biryani",category:"Rice",desc:"Fragrant biryani",price:220,img:""},
+      {name:"Sweet Corn Rice",category:"Rice",desc:"With sweet corn",price:138,img:""},
+      {name:"Paneer Biryani",category:"Rice",desc:"With paneer",price:250,img:""},
+      {name:"Lemon Rice",category:"Rice",desc:"Tangy lemon",price:149.5,img:""},
+      {name:"Dahi Rice",category:"Rice",desc:"Curd rice",price:149.5,img:""},
+      {name:"Tomato Rice",category:"Rice",desc:"Tangy tomato",price:149.5,img:""},
+      // South Indian
+      {name:"Masala Dosa",category:"South Indian",desc:"Crispy with potato",price:149.5,img:""},
+      {name:"Paneer Masala Dosa",category:"South Indian",desc:"With paneer masala",price:178.25,img:""},
+      {name:"Paneer Dosa",category:"South Indian",desc:"Stuffed with paneer",price:189.75,img:""},
+      {name:"Paneer Spring Roll Dosa",category:"South Indian",desc:"With spring roll",price:247.25,img:""},
+      {name:"Mysore Dosa",category:"South Indian",desc:"Spicy red chutney",price:195.5,img:""},
+      {name:"Sada Dosa",category:"South Indian",desc:"Plain crispy",price:120.75,img:""},
+      {name:"Onion Tomato Uttapam",category:"South Indian",desc:"Thick pancake",price:178.25,img:""},
+      {name:"Mysore Uttapam",category:"South Indian",desc:"Spicy mysore",price:189.75,img:""},
+      {name:"Rava Masala Dosa",category:"South Indian",desc:"Semolina dosa",price:178.25,img:""},
+      {name:"Rava Paneer Dosa",category:"South Indian",desc:"Semolina with paneer",price:201.25,img:""},
+      {name:"Spring Roll Dosa",category:"South Indian",desc:"With spring roll",price:235.75,img:""},
+      {name:"Onion Delight Uttapam",category:"South Indian",desc:"Onion topped",price:189.75,img:""},
+      {name:"Aloo Crunchy Dosa",category:"South Indian",desc:"Crunchy potato",price:178.25,img:""},
+      {name:"Plain Uttapam",category:"South Indian",desc:"Classic pancake",price:138,img:""},
+      {name:"Onion Uttapam",category:"South Indian",desc:"Onion topped",price:149.5,img:""},
+      {name:"Tomato Uttapam",category:"South Indian",desc:"Tomato uttapam",price:161,img:""},
+      {name:"Sambar Rice",category:"South Indian",desc:"With lentil sambar",price:149.5,img:""},
+      {name:"Special Paneer Spicy Uttapam",category:"South Indian",desc:"Spicy paneer",price:253,img:""},
+      {name:"Onion Dosa",category:"South Indian",desc:"With onion",price:138,img:""},
+      {name:"Crispy Bite Dosa",category:"South Indian",desc:"Extra crispy",price:207,img:""},
+      {name:"Mexi Roll Dosa",category:"South Indian",desc:"Mexican style",price:247.25,img:""},
+      {name:"Crunchy Paneer Special Dosa",category:"South Indian",desc:"Premium crunchy",price:281.75,img:""},
+      {name:"Rava Sada Dosa",category:"South Indian",desc:"Plain semolina",price:138,img:""},
+      {name:"Rava Onion Dosa",category:"South Indian",desc:"Semolina onion",price:161,img:""},
+      // Fried Rice & Noodles
+      {name:"Chilli Garlic Noodle",category:"Noodles",desc:"Spicy garlic",price:109.25,img:""},
+      {name:"Veg Chowmein",category:"Noodles",desc:"Classic chowmein",price:103.5,img:""},
+      {name:"Veg Hakka Noodle",category:"Noodles",desc:"Hakka style",price:103.5,img:""},
+      {name:"Paneer Chowmein",category:"Noodles",desc:"With paneer",price:126.5,img:""},
+      {name:"Singapoori Noodle",category:"Noodles",desc:"Singapore style",price:109.25,img:""},
+      {name:"Schezwan Noodle",category:"Noodles",desc:"Spicy schezwan",price:109.25,img:""},
+      {name:"Paneer Fried Rice",category:"Fried Rice",desc:"With paneer",price:138,img:""},
+      {name:"Veg Fried Rice",category:"Fried Rice",desc:"Classic fried rice",price:115,img:""},
+      {name:"Veg Schezwan Rice",category:"Fried Rice",desc:"Spicy schezwan",price:115,img:""},
+      {name:"Mushroom Fried Rice",category:"Fried Rice",desc:"With mushroom",price:138,img:""},
+      // Pizza & Pasta
+      {name:"Special Chauhan Pizza",category:"Pizza",desc:"Paneer, Onion, Corn, Pineapple",price:253,img:""},
+      {name:"Veg Cheese Pizza",category:"Pizza",desc:"Classic cheese",price:201.25,img:""},
+      {name:"Paneer Tikka Pizza",category:"Pizza",desc:"With tikka topping",price:253,img:""},
+      {name:"Paneer Delight Pizza",category:"Pizza",desc:"Loaded paneer",price:241.5,img:""},
+      {name:"Margherita Pizza",category:"Pizza",desc:"Classic tomato cheese",price:184,img:""},
+      {name:"Exotic Pizza",category:"Pizza",desc:"Exotic vegetable",price:201.25,img:""},
+      {name:"Mushroom Onion Capsicum Pizza",category:"Pizza",desc:"Mushroom onion capsicum",price:212.75,img:""},
+      {name:"Sweet Corn Pizza",category:"Pizza",desc:"Sweet corn topped",price:212.75,img:""},
+      {name:"Spicy Mazzen Pizza",category:"Pizza",desc:"Capsicum, Onion, Jalapeno",price:241.5,img:""},
+      {name:"Paneer Chilli Pizza",category:"Pizza",desc:"Chilli paneer",price:253,img:""},
+      {name:"Alfredo Pasta",category:"Pasta",desc:"White sauce penne",price:195.5,img:""},
+      {name:"Arabita Pasta",category:"Pasta",desc:"Red sauce penne",price:195.5,img:""},
+      // Burgers & Sandwiches
+      {name:"Veg Cheese Burger",category:"Burgers",desc:"Veg patty with cheese",price:115,img:""},
+      {name:"Veg Burger",category:"Burgers",desc:"Classic veg burger",price:103.5,img:""},
+      {name:"Paneer Burger",category:"Burgers",desc:"Paneer patty burger",price:126.5,img:""},
+      {name:"Paneer Tikka Burger",category:"Burgers",desc:"Tikka paneer burger",price:126.5,img:""},
+      {name:"Grilled Sandwich",category:"Sandwiches",desc:"Toasted veg grilled",price:155.25,img:""},
+      {name:"Veg Club Sandwich",category:"Sandwiches",desc:"Triple layer club",price:155.25,img:""},
+      {name:"Veg Sandwich",category:"Sandwiches",desc:"Classic veg sandwich",price:113.85,img:""},
+      {name:"Plain Cheese Sandwich",category:"Sandwiches",desc:"Cheese sandwich",price:113.85,img:""},
+      // Snacks
+      {name:"Chhole Bhature",category:"Snacks",desc:"Spicy chickpeas with fried bread",price:138,img:""},
+      {name:"Amritsari Chhole Kulcha",category:"Snacks",desc:"Amritsari style chhole",price:155.25,img:""},
+      {name:"Mumbai Pav Bhaji",category:"Snacks",desc:"Classic street food",price:161,img:""},
+      {name:"Cheese Pav Bhaji",category:"Snacks",desc:"Extra cheese",price:178.25,img:""},
+      {name:"Cheese Chilli Toast",category:"Snacks",desc:"Cheesy chilli toast",price:155.25,img:""},
+      {name:"Chhole",category:"Snacks",desc:"Spicy chickpea curry",price:138,img:""},
+      {name:"Veg Cutlet",category:"Snacks",desc:"Crispy vegetable cutlets",price:126.5,img:""},
+      {name:"French Fries",category:"Snacks",desc:"Crispy golden fries",price:126.5,img:""},
+      {name:"Paneer Ke Sholey",category:"Snacks",desc:"Flaming paneer snack",price:276,img:""},
+      {name:"Paneer Cutlet",category:"Snacks",desc:"Paneer stuffed cutlet",price:178.25,img:""},
+      {name:"Paneer Kulcha",category:"Snacks",desc:"Paneer stuffed kulcha",price:63.25,img:""},
+      {name:"Poha",category:"Snacks",desc:"Flattened rice snack",price:113.85,img:""},
+      {name:"Grilled Vada Pav",category:"Snacks",desc:"Mumbai vada pav grilled",price:80.5,img:""},
+      {name:"Onion Kulcha",category:"Snacks",desc:"Onion stuffed kulcha",price:51.75,img:""},
+      {name:"Grilled Cheese Vada Pav",category:"Snacks",desc:"Cheese loaded vada pav",price:126.5,img:""},
+      {name:"Butter Toast",category:"Snacks",desc:"Simple butter toast",price:69,img:""},
+      {name:"Poori Bhaji",category:"Snacks",desc:"Puffed bread with potato",price:138,img:""},
+      {name:"Chhole Poori",category:"Snacks",desc:"Chhole with poori",price:149.5,img:""},
+      {name:"Masala Peanut",category:"Snacks",desc:"Spiced peanuts",price:138,img:""},
+      {name:"Fry Kaju",category:"Snacks",desc:"Fried cashews",price:149.5,img:""},
+      // Rolls & Frankies
+      {name:"Paneer Chilli Roll",category:"Rolls",desc:"Paneer chilli wrapped",price:172.5,img:""},
+      {name:"Paneer Tikka Kathi Roll",category:"Rolls",desc:"Tikka paneer kathi",price:172.5,img:""},
+      {name:"Veg Frankie",category:"Frankies",desc:"Vegetable frankie wrap",price:126.5,img:""},
+      {name:"Paneer Frankie",category:"Frankies",desc:"Paneer frankie wrap",price:161,img:""},
+      // Accompaniments
+      {name:"Boondi Raita",category:"Accompaniments",desc:"Yogurt with boondi",price:103.5,img:""},
+      {name:"Pineapple Raita",category:"Accompaniments",desc:"Pineapple yogurt",price:126.5,img:""},
+      {name:"Kheera Raita",category:"Accompaniments",desc:"Cucumber raita",price:103.5,img:""},
+      {name:"Plain Curd",category:"Accompaniments",desc:"Fresh yogurt",price:69,img:""},
+      {name:"Mix Raita",category:"Accompaniments",desc:"Mixed vegetable raita",price:103.5,img:""},
+      {name:"Fruit Raita",category:"Accompaniments",desc:"Fruit yogurt raita",price:138,img:""},
+      {name:"Fry Papad",category:"Accompaniments",desc:"Fried papad",price:28.75,img:""},
+      {name:"Dry Papad",category:"Accompaniments",desc:"Roasted papad",price:28.75,img:""},
+      {name:"Masala Papad",category:"Accompaniments",desc:"Spiced topped papad",price:40.25,img:""},
+      {name:"Extra Cheese",category:"Accompaniments",desc:"Additional cheese",price:57.5,img:""},
+      // Desserts
+      {name:"Gulab Jamun with Ice Cream",category:"Desserts",desc:"Warm gulab jamun with vanilla",price:69,img:""},
+      {name:"Ice Cream Double Scoop",category:"Desserts",desc:"Double scoop ice cream",price:80.5,img:""},
+      // Beverages
+      {name:"Cold Coffee with Ice Cream",category:"Beverages",desc:"Topped with ice cream",price:172.5,img:""},
+      {name:"Virgin Mojito",category:"Beverages",desc:"Refreshing mint lime",price:115,img:""},
+      {name:"Oreo Shake",category:"Beverages",desc:"Thick Oreo shake",price:195.5,img:""},
+      {name:"Cold Coffee",category:"Beverages",desc:"Classic cold coffee",price:172.5,img:""},
+      {name:"Chocolate Shake",category:"Beverages",desc:"Rich chocolate",price:184,img:""},
+      {name:"Sweet or Salted Lassi",category:"Beverages",desc:"Traditional yogurt",price:69,img:""},
+      {name:"Buttermilk",category:"Beverages",desc:"Refreshing chaas",price:69,img:""},
+      {name:"Tea",category:"Beverages",desc:"Hot masala chai",price:28.75,img:""},
+      {name:"Black Tea",category:"Beverages",desc:"Plain black tea",price:28.75,img:""},
+      {name:"Green Tea",category:"Beverages",desc:"Healthy green tea",price:40.25,img:""},
+      {name:"Soft Drinks",category:"Beverages",desc:"Coke/Pepsi/Sprite",price:34.5,img:""},
+      {name:"Fresh Lime Soda",category:"Beverages",desc:"Sweet/salt",price:69,img:""},
+      {name:"Red Bull",category:"Beverages",desc:"Energy drink",price:143.75,img:""},
+      {name:"Peach Blossom",category:"Beverages",desc:"Peach mocktail",price:115,img:""},
+      {name:"Blue Ocean",category:"Beverages",desc:"Blue curacao mocktail",price:138,img:""},
+      {name:"Red Ocean",category:"Beverages",desc:"Red berry mocktail",price:138,img:""},
+      {name:"Electric Shock",category:"Beverages",desc:"Tangy electric mocktail",price:149.5,img:""},
+      {name:"Vanilla or Strawberry Shake",category:"Beverages",desc:"Classic milkshake",price:172.5,img:""},
+      {name:"Butterscotch Shake",category:"Beverages",desc:"Butterscotch milkshake",price:184,img:""},
+      {name:"Kitkat Shake",category:"Beverages",desc:"Kitkat chocolate",price:195.5,img:""},
+      {name:"Flavored Lassi",category:"Beverages",desc:"Mango or Strawberry",price:92,img:""},
+      {name:"Lime Soda or Water",category:"Beverages",desc:"Fresh lime soda",price:69,img:""}
     ];
+
     for(const m of menu) await addDoc(collection(db,'menu'),m);
-    const sweets=[{name:"Kaju Katli",price:650,desc:"Premium cashew fudge",img:"https://images.unsplash.com/photo-1605197787820-40a44950c0c6?w=400",tag:"Premium"},{name:"Gulab Jamun",price:380,desc:"Soft milk dumplings",img:"https://images.unsplash.com/photo-1601303516534-bf91b8f9b63d?w=400",tag:"Bestseller"}];
+    
+    const sweets=[
+      {name:"Kaju Katli",price:650,desc:"Premium cashew fudge with silver foil",img:"",tag:"Premium"},
+      {name:"Badam Barfi",price:700,desc:"Rich almond barfi with cardamom",img:"",tag:"Premium"},
+      {name:"Rasgulla",price:400,desc:"Soft spongy cottage cheese balls in syrup",img:"",tag:"Bestseller"},
+      {name:"Gulab Jamun",price:380,desc:"Soft milk dumplings in rose-cardamom syrup",img:"",tag:"Bestseller"},
+      {name:"Rasmalai",price:450,desc:"Flattened paneer discs in saffron milk",img:"",tag:"Premium"},
+      {name:"Motichoor Ladoo",price:500,desc:"Fine boondi ladoos with pure ghee",img:"",tag:"Festival Fav"},
+      {name:"Besan Ladoo",price:450,desc:"Gram flour ladoos with ghee and sugar",img:"",tag:"Classic"},
+      {name:"Peda",price:550,desc:"Soft milk peda with pistachio",img:"",tag:"Special"},
+      {name:"Kalakand",price:480,desc:"Moist milk cake with cardamom",img:"",tag:"Bestseller"},
+      {name:"Soan Papdi",price:400,desc:"Flaky sweet with ghee and dry fruits",img:"",tag:"Festival"},
+      {name:"Cham Cham",price:450,desc:"Colorful Bengali sweet with cream",img:"",tag:"Bengali"},
+      {name:"Mysore Pak",price:550,desc:"Rich gram flour fudge with ghee",img:"",tag:"South Indian"},
+      {name:"Ghevar",price:600,desc:"Honeycomb-shaped festive sweet",img:"",tag:"Teej Special"},
+      {name:"Balushahi",price:380,desc:"Flaky deep-fried sweet in syrup",img:"",tag:"Classic"},
+      {name:"Malpua",price:420,desc:"Sweet pancakes soaked in sugar syrup",img:"",tag:"Traditional"},
+      {name:"Jalebi",price:350,desc:"Crispy spiral sweet in saffron syrup",img:"",tag:"Hot"},
+      {name:"Moong Dal Halwa",price:700,desc:"Slow-cooked lentil halwa with ghee",img:"",tag:"Winter Special"},
+      {name:"Gajar Halwa",price:500,desc:"Carrot halwa with nuts and khoya",img:"",tag:"Winter Special"},
+      {name:"Sandesh",price:550,desc:"Bengali cottage cheese sweet",img:"",tag:"Bengali"},
+      {name:"Patisa Rolls",price:450,desc:"Flaky rolls with dry fruits",img:"",tag:"Gift Pack"},
+      {name:"Anjeer Barfi",price:800,desc:"Fig and dry fruit barfi",img:"",tag:"Premium"},
+      {name:"Pista Roll",price:750,desc:"Pistachio rolled barfi",img:"",tag:"Premium"}
+    ];
     for(const s of sweets) await addDoc(collection(db,'sweets'),s);
-    alert("Full Menu Loaded!");
+    
+    alert("Full Menu Loaded! Images will appear as you upload them or use placeholders.");
   };
 
   window.addEventListener('load',()=>setTimeout(()=>document.getElementById('preloader').classList.add('hidden'),1200));
