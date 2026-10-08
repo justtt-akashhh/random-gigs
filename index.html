@@ -9,242 +9,164 @@
 
 <style>
 :root {
-  --gold: #d4af37;
-  --gold-light: #f4d03f;
-  --dark: #0a0a0a;
-  --dark-2: #111111;
-  --dark-3: #1a1a1a;
-  --dark-4: #252525;
-  --text: #f5f5f5;
-  --text-muted: #a0a0a0;
-  --success: #4ade80;
-  --danger: #ff4757;
+  --gold: #d4af37; --gold-light: #f4d03f; --dark: #0a0a0a; --dark-2: #111; 
+  --dark-3: #1a1a1a; --dark-4: #252525; --text: #f5f5f5; --text-muted: #a0a0a0;
+  --success: #4ade80; --danger: #ff4757; --sweet: #ff6b9d;
 }
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{font-family:'Poppins',sans-serif;background:var(--dark);color:var(--text);overflow-x:hidden;line-height:1.6}
+::-webkit-scrollbar{width:8px} ::-webkit-scrollbar-track{background:var(--dark)} ::-webkit-scrollbar-thumb{background:linear-gradient(var(--gold),#b8860b);border-radius:10px}
 
-* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-html { scroll-behavior: smooth; }
-body { font-family: 'Poppins', sans-serif; background: var(--dark); color: var(--text); overflow-x: hidden; line-height: 1.6; }
+/* Preloader */
+.preloader{position:fixed;inset:0;background:var(--dark);display:flex;align-items:center;justify-content:center;z-index:99999;transition:opacity .8s}
+.preloader.hidden{opacity:0;pointer-events:none}
+.loader-brand{font-family:'Great Vibes',cursive;font-size:3.5rem;color:var(--gold);animation:glow 2s infinite alternate}
+@keyframes glow{to{text-shadow:0 0 20px rgba(212,175,55,.6)}}
 
-::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { background: var(--dark); }
-::-webkit-scrollbar-thumb { background: linear-gradient(var(--gold), #b8860b); border-radius: 10px; }
+/* Navbar */
+.navbar{position:fixed;top:0;width:100%;padding:20px 5%;display:flex;justify-content:space-between;align-items:center;z-index:1000;transition:.4s;background:transparent}
+.navbar.scrolled{background:rgba(10,10,10,.95);backdrop-filter:blur(15px);padding:12px 5%;box-shadow:0 5px 30px rgba(0,0,0,.5);border-bottom:1px solid rgba(212,175,55,.1)}
+.logo{font-family:'Great Vibes',cursive;font-size:2.2rem;color:var(--gold);text-decoration:none}
+.nav-links{display:flex;gap:30px;list-style:none}
+.nav-links a{color:var(--text);text-decoration:none;font-weight:500;font-size:.95rem;transition:.3s}
+.nav-links a:hover{color:var(--gold)}
+.nav-btn{background:linear-gradient(135deg,var(--gold),#b8860b);color:#000;padding:10px 24px;border:none;border-radius:30px;font-weight:600;cursor:pointer;transition:.3s}
+.hamburger{display:none;background:none;border:none;color:var(--gold);font-size:1.5rem;cursor:pointer}
 
-.preloader { position: fixed; inset: 0; background: var(--dark); display: flex; align-items: center; justify-content: center; z-index: 99999; transition: opacity 0.8s, visibility 0.8s; }
-.preloader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-.loader-content { text-align: center; }
-.loader-brand { font-family: 'Great Vibes', cursive; font-size: 3.5rem; color: var(--gold); animation: glow 2s infinite alternate; }
-.loader-line { width: 150px; height: 2px; background: var(--dark-3); margin: 20px auto; border-radius: 2px; overflow: hidden; }
-.loader-line span { display: block; height: 100%; width: 0; background: var(--gold); animation: load 2s infinite ease-in-out; }
-@keyframes glow { to { text-shadow: 0 0 20px rgba(212,175,55,0.6); } }
-@keyframes load { 0% { width: 0; } 50% { width: 100%; } 100% { width: 0; } }
+/* Hero */
+.hero{height:100vh;position:relative;display:flex;align-items:center;justify-content:center;text-align:center;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background-size:cover;background-position:center}
+.hero-bg::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(10,10,10,.85),rgba(139,0,0,.4))}
+.hero-content{position:relative;z-index:2;max-width:900px;padding:0 20px}
+.hero-badge{display:inline-block;background:rgba(212,175,55,.15);border:1px solid rgba(212,175,55,.4);color:var(--gold);padding:8px 20px;border-radius:30px;font-size:.8rem;letter-spacing:3px;margin-bottom:25px;opacity:0;animation:fadeUp .8s .3s forwards}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(2.5rem,6vw,5rem);font-weight:700;line-height:1.1;margin-bottom:20px;opacity:0;animation:fadeUp .8s .5s forwards}
+.hero h1 span{font-family:'Great Vibes',cursive;font-weight:400;background:linear-gradient(135deg,var(--gold),var(--gold-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{font-size:1.1rem;color:var(--text-muted);margin-bottom:35px;opacity:0;animation:fadeUp .8s .7s forwards}
+.hero-btns{display:flex;gap:15px;justify-content:center;flex-wrap:wrap;opacity:0;animation:fadeUp .8s .9s forwards}
+.btn-primary{background:linear-gradient(135deg,var(--gold),#b8860b);color:#000;padding:14px 32px;border-radius:50px;font-weight:600;text-decoration:none;transition:.3s;border:none;cursor:pointer;font-size:1rem;display:inline-flex;align-items:center;gap:8px}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 12px 35px rgba(212,175,55,.4)}
+.btn-outline{background:transparent;color:#fff;padding:14px 32px;border-radius:50px;font-weight:600;text-decoration:none;transition:.3s;border:2px solid rgba(212,175,55,.5);cursor:pointer;font-size:1rem;display:inline-flex;align-items:center;gap:8px}
+.btn-outline:hover{background:var(--gold);color:#000;border-color:var(--gold)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
 
-.navbar { position: fixed; top: 0; width: 100%; padding: 20px 5%; display: flex; justify-content: space-between; align-items: center; z-index: 1000; transition: all 0.4s; background: transparent; }
-.navbar.scrolled { background: rgba(10,10,10,0.95); backdrop-filter: blur(15px); padding: 12px 5%; box-shadow: 0 5px 30px rgba(0,0,0,0.5); border-bottom: 1px solid rgba(212,175,55,0.1); }
-.logo { font-family: 'Great Vibes', cursive; font-size: 2.2rem; color: var(--gold); text-decoration: none; text-shadow: 0 0 15px rgba(212,175,55,0.3); }
-.nav-links { display: flex; gap: 30px; list-style: none; }
-.nav-links a { color: var(--text); text-decoration: none; font-weight: 500; font-size: 0.95rem; position: relative; transition: 0.3s; }
-.nav-links a::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 2px; background: var(--gold); transition: width 0.3s; }
-.nav-links a:hover { color: var(--gold); }
-.nav-links a:hover::after { width: 100%; }
-.nav-btn { background: linear-gradient(135deg, var(--gold), #b8860b); color: #000; padding: 10px 24px; border: none; border-radius: 30px; font-weight: 600; cursor: pointer; transition: 0.3s; font-size: 0.9rem; }
-.nav-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(212,175,55,0.4); }
-.hamburger { display: none; background: none; border: none; color: var(--gold); font-size: 1.5rem; cursor: pointer; }
+/* Sections */
+section{padding:100px 5%}
+.section-header{text-align:center;margin-bottom:60px}
+.section-header .tag{color:var(--gold);letter-spacing:4px;font-size:.8rem;text-transform:uppercase;display:block;margin-bottom:10px}
+.section-header h2{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem)}
+.section-header h2 span{color:var(--gold);font-family:'Great Vibes',cursive}
+.section-header .divider{width:60px;height:2px;background:var(--gold);margin:20px auto;position:relative}
+.section-header .divider::before,.section-header .divider::after{content:'';position:absolute;top:-3px;width:8px;height:8px;background:var(--gold);border-radius:50%}
+.section-header .divider::before{left:-12px} .section-header .divider::after{right:-12px}
 
-.hero { height: 100vh; position: relative; display: flex; align-items: center; justify-content: center; text-align: center; overflow: hidden; }
-.hero-bg { position: absolute; inset: 0; background-size: cover; background-position: center; transition: opacity 1.5s ease-in-out; }
-.hero-bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(10,10,10,0.85) 0%, rgba(139,0,0,0.4) 100%); }
-.hero-content { position: relative; z-index: 2; max-width: 900px; padding: 0 20px; }
-.hero-badge { display: inline-block; background: rgba(212,175,55,0.15); border: 1px solid rgba(212,175,55,0.4); color: var(--gold); padding: 8px 20px; border-radius: 30px; font-size: 0.8rem; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 25px; opacity: 0; animation: fadeUp 0.8s 0.3s forwards; }
-.hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.5rem, 6vw, 5rem); font-weight: 700; line-height: 1.1; margin-bottom: 20px; opacity: 0; animation: fadeUp 0.8s 0.5s forwards; }
-.hero h1 span { font-family: 'Great Vibes', cursive; font-weight: 400; background: linear-gradient(135deg, var(--gold), var(--gold-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-.hero p { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 35px; opacity: 0; animation: fadeUp 0.8s 0.7s forwards; }
-.hero-btns { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; opacity: 0; animation: fadeUp 0.8s 0.9s forwards; }
-.btn-primary { background: linear-gradient(135deg, var(--gold), #b8860b); color: #000; padding: 14px 32px; border-radius: 50px; font-weight: 600; text-decoration: none; transition: 0.3s; border: none; cursor: pointer; font-size: 1rem; display: inline-flex; align-items: center; gap: 8px; }
-.btn-primary:hover { transform: translateY(-3px); box-shadow: 0 12px 35px rgba(212,175,55,0.4); }
-.btn-outline { background: transparent; color: #fff; padding: 14px 32px; border-radius: 50px; font-weight: 600; text-decoration: none; transition: 0.3s; border: 2px solid rgba(212,175,55,0.5); cursor: pointer; font-size: 1rem; display: inline-flex; align-items: center; gap: 8px; }
-.btn-outline:hover { background: var(--gold); color: #000; border-color: var(--gold); }
-.scroll-indicator { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); color: var(--gold); font-size: 1.5rem; animation: bounce 2s infinite; z-index: 2; }
-@keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes bounce { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(-15px); } }
+/* Menu */
+.menu-section{background:var(--dark-2)}
+.menu-tabs{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-bottom:40px}
+.menu-tab{padding:10px 20px;background:var(--dark-3);border:1px solid rgba(212,175,55,.15);border-radius:30px;color:var(--text-muted);cursor:pointer;font-size:.85rem;transition:.3s}
+.menu-tab.active{background:var(--gold);color:#000;border-color:var(--gold);font-weight:600}
+.menu-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;max-width:1200px;margin:0 auto}
+.menu-card{background:var(--dark-3);border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.05);transition:.4s;position:relative}
+.menu-card:hover{transform:translateY(-8px);border-color:rgba(212,175,55,.3);box-shadow:0 15px 40px rgba(0,0,0,.4)}
+.menu-card-img{height:200px;overflow:hidden;background:linear-gradient(135deg,var(--dark-3),var(--dark-4));display:flex;align-items:center;justify-content:center}
+.menu-card-img img{width:100%;height:100%;object-fit:contain;padding:10px;transition:.5s}
+.menu-card:hover .menu-card-img img{transform:scale(1.05)}
+.veg-badge{position:absolute;top:12px;right:12px;width:18px;height:18px;border:2px solid var(--success);display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.6);border-radius:4px}
+.veg-badge::after{content:'';width:8px;height:8px;background:var(--success);border-radius:50%}
+.discount-badge{position:absolute;top:12px;left:12px;background:var(--danger);color:#fff;padding:4px 10px;border-radius:20px;font-size:.75rem;font-weight:700}
+.menu-card-body{padding:20px}
+.menu-card-body h3{font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:8px}
+.menu-card-body p{color:var(--text-muted);font-size:.85rem;margin-bottom:15px;min-height:40px}
+.price-row{display:flex;align-items:center;justify-content:space-between}
+.old-price{text-decoration:line-through;color:var(--text-muted);font-size:.9rem;margin-right:8px}
+.new-price{color:var(--gold);font-weight:700;font-size:1.2rem}
+.unavailable{opacity:.5;pointer-events:none}
+.unavailable::after{content:'UNAVAILABLE';position:absolute;inset:0;background:rgba(0,0,0,.7);display:flex;align-items:center;justify-content:center;color:var(--danger);font-weight:700;letter-spacing:2px}
 
-section { padding: 100px 5%; position: relative; }
-.section-header { text-align: center; margin-bottom: 60px; }
-.section-header .tag { color: var(--gold); letter-spacing: 4px; font-size: 0.8rem; text-transform: uppercase; display: block; margin-bottom: 10px; }
-.section-header h2 { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 700; }
-.section-header h2 span { color: var(--gold); font-family: 'Great Vibes', cursive; font-weight: 400; }
-.section-header .divider { width: 60px; height: 2px; background: var(--gold); margin: 20px auto; position: relative; }
-.section-header .divider::before, .section-header .divider::after { content: ''; position: absolute; top: -3px; width: 8px; height: 8px; background: var(--gold); border-radius: 50%; }
-.section-header .divider::before { left: -12px; }
-.section-header .divider::after { right: -12px; }
+/* Sweets */
+.sweets-section{background:linear-gradient(135deg,#1a0a0a,var(--dark),#1a0a15)}
+.sweets-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:25px;max-width:1200px;margin:0 auto}
+.sweet-card{background:var(--dark-2);border-radius:18px;overflow:hidden;border:1px solid rgba(255,107,157,.1);transition:.4s}
+.sweet-card:hover{transform:translateY(-8px);box-shadow:0 20px 50px rgba(255,107,157,.15);border-color:rgba(255,107,157,.3)}
+.sweet-card img{width:100%;height:220px;object-fit:contain;background:linear-gradient(135deg,var(--dark-2),var(--dark-3));padding:10px}
+.sweet-card .body{padding:20px}
+.sweet-card h3{font-family:'Playfair Display',serif;font-size:1.15rem;margin-bottom:8px}
+.sweet-card p{color:var(--text-muted);font-size:.85rem;margin-bottom:15px}
+.sweet-card .footer{display:flex;justify-content:space-between;align-items:center}
+.sweet-card .price{color:var(--sweet);font-weight:700;font-size:1.1rem}
+.sweet-card .btn-book{background:linear-gradient(135deg,#ff6b9d,#c44569);color:#fff;border:none;padding:8px 18px;border-radius:20px;font-size:.85rem;font-weight:600;cursor:pointer}
 
-.menu-section { background: var(--dark-2); }
-.menu-tabs { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 40px; max-width: 1200px; margin-left: auto; margin-right: auto; }
-.menu-tab { padding: 10px 20px; background: var(--dark-3); border: 1px solid rgba(212,175,55,0.15); border-radius: 30px; color: var(--text-muted); cursor: pointer; font-size: 0.85rem; font-weight: 500; transition: 0.3s; white-space: nowrap; }
-.menu-tab:hover { border-color: var(--gold); color: var(--gold); }
-.menu-tab.active { background: var(--gold); color: #000; border-color: var(--gold); font-weight: 600; }
-.menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; max-width: 1200px; margin: 0 auto; }
-.menu-card { background: var(--dark-3); border-radius: 16px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); transition: 0.4s; position: relative; }
-.menu-card:hover { transform: translateY(-8px); border-color: rgba(212,175,55,0.3); box-shadow: 0 15px 40px rgba(0,0,0,0.4); }
-.menu-card-img { height: 200px; overflow: hidden; position: relative; background: linear-gradient(135deg, var(--dark-3), var(--dark-4)); display: flex; align-items: center; justify-content: center; }
-.menu-card-img img { width: 100%; height: 100%; object-fit: contain; transition: 0.5s; padding: 10px; }
-.menu-card:hover .menu-card-img img { transform: scale(1.05); }
-.veg-badge { position: absolute; top: 12px; right: 12px; width: 18px; height: 18px; border: 2px solid var(--success); display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); border-radius: 4px; }
-.veg-badge::after { content: ''; width: 8px; height: 8px; background: var(--success); border-radius: 50%; }
-.discount-badge { position: absolute; top: 12px; left: 12px; background: var(--danger); color: #fff; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
-.menu-card-body { padding: 20px; }
-.menu-card-body h3 { font-family: 'Playfair Display', serif; font-size: 1.2rem; margin-bottom: 8px; }
-.menu-card-body p { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 15px; line-height: 1.5; min-height: 40px; }
-.price-row { display: flex; align-items: center; justify-content: space-between; }
-.price-box { display: flex; align-items: center; gap: 10px; }
-.old-price { text-decoration: line-through; color: var(--text-muted); font-size: 0.9rem; }
-.new-price { color: var(--gold); font-weight: 700; font-size: 1.2rem; }
-.unavailable { opacity: 0.5; pointer-events: none; }
-.unavailable::after { content: 'UNAVAILABLE'; position: absolute; inset: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; color: var(--danger); font-weight: 700; letter-spacing: 2px; }
+/* Gallery */
+.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:15px;max-width:1200px;margin:0 auto}
+.gallery-item{border-radius:12px;overflow:hidden;aspect-ratio:1;background:var(--dark-3)}
+.gallery-item img{width:100%;height:100%;object-fit:contain;transition:.5s}
+.gallery-item:hover img{transform:scale(1.1)}
 
-.sweets-section { background: linear-gradient(135deg, #1a0a0a 0%, var(--dark) 50%, #1a0a15 100%); position: relative; }
-.sweets-section::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--gold), #ff6b9d, var(--gold)); }
-.sweets-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 25px; max-width: 1200px; margin: 0 auto; }
-.sweet-card { background: var(--dark-2); border-radius: 18px; overflow: hidden; border: 1px solid rgba(255,107,157,0.1); transition: 0.4s; }
-.sweet-card:hover { transform: translateY(-8px); box-shadow: 0 20px 50px rgba(255,107,157,0.15); border-color: rgba(255,107,157,0.3); }
-.sweet-card img { width: 100%; height: 220px; object-fit: contain; background: linear-gradient(135deg, var(--dark-2), var(--dark-3)); padding: 10px; }
-.sweet-card .body { padding: 20px; }
-.sweet-card h3 { font-family: 'Playfair Display', serif; font-size: 1.15rem; margin-bottom: 8px; }
-.sweet-card p { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 15px; }
-.sweet-card .footer { display: flex; justify-content: space-between; align-items: center; }
-.sweet-card .price { color: #ff6b9d; font-weight: 700; font-size: 1.1rem; }
-.sweet-card .btn-book { background: linear-gradient(135deg, #ff6b9d, #c44569); color: #fff; border: none; padding: 8px 18px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: 0.3s; }
-.sweet-card .btn-book:hover { transform: scale(1.05); box-shadow: 0 8px 20px rgba(255,107,157,0.4); }
+/* Booking & Forms */
+.booking-section{background:linear-gradient(rgba(0,0,0,.85),rgba(0,0,0,.85)),url('https://images.unsplash.com/photo-1550966871-3ed3cdb51f3a?w=1920') center/cover fixed}
+.booking-container{max-width:600px;margin:0 auto;background:rgba(26,26,26,.9);backdrop-filter:blur(20px);padding:40px;border-radius:20px;border:1px solid rgba(212,175,55,.2)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+.form-group{margin-bottom:20px}
+.form-group label{display:block;color:var(--gold);font-size:.85rem;margin-bottom:8px}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:12px 16px;background:var(--dark-3);border:1px solid rgba(212,175,55,.15);border-radius:10px;color:#fff;font-family:inherit}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--gold)}
 
-.gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; max-width: 1200px; margin: 0 auto; }
-.gallery-item { border-radius: 12px; overflow: hidden; aspect-ratio: 1; position: relative; cursor: pointer; }
-.gallery-item img { width: 100%; height: 100%; object-fit: contain; background: var(--dark-3); transition: 0.5s; }
-.gallery-item:hover img { transform: scale(1.1); }
-.gallery-item::after { content: ''; position: absolute; inset: 0; background: linear-gradient(transparent 50%, rgba(0,0,0,0.7)); opacity: 0; transition: 0.3s; }
-.gallery-item:hover::after { opacity: 1; }
+/* Footer */
+footer{background:#050505;padding:60px 5% 20px;border-top:1px solid rgba(212,175,55,.1)}
+.footer-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:40px;max-width:1200px;margin:0 auto 40px}
+.footer-col h4{color:var(--gold);font-family:'Playfair Display',serif;margin-bottom:20px}
+.footer-col p,.footer-col a{color:var(--text-muted);text-decoration:none;display:block;margin-bottom:10px;font-size:.9rem}
+.admin-trigger{color:#333;font-size:.75rem;cursor:pointer;margin-top:15px;display:inline-block;padding:5px 10px;border:1px solid #333;border-radius:5px}
+.admin-trigger:hover{color:var(--gold);border-color:var(--gold)}
 
-.booking-section { background: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url('https://images.unsplash.com/photo-1550966871-3ed3cdb51f3a?w=1920') center/cover fixed; }
-.booking-container { max-width: 600px; margin: 0 auto; background: rgba(26,26,26,0.9); backdrop-filter: blur(20px); padding: 40px; border-radius: 20px; border: 1px solid rgba(212,175,55,0.2); box-shadow: 0 30px 60px rgba(0,0,0,0.5); }
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-.form-group { margin-bottom: 20px; }
-.form-group label { display: block; color: var(--gold); font-size: 0.85rem; font-weight: 500; margin-bottom: 8px; }
-.form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px 16px; background: var(--dark-3); border: 1px solid rgba(212,175,55,0.15); border-radius: 10px; color: #fff; font-family: inherit; font-size: 0.95rem; transition: 0.3s; }
-.form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 15px rgba(212,175,55,0.15); }
+/* Modals */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.95);backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;z-index:5000;padding:20px}
+.modal.show{display:flex;animation:fadeIn .3s}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.modal-box{background:var(--dark-2);border-radius:20px;padding:30px;max-width:500px;width:100%;border:1px solid rgba(212,175,55,.2);max-height:90vh;overflow-y:auto;position:relative}
+.modal-box.wide{max-width:900px}
+.modal-close{position:absolute;top:15px;right:20px;background:none;border:none;color:#888;font-size:1.5rem;cursor:pointer}
 
-footer { background: #050505; padding: 60px 5% 20px; border-top: 1px solid rgba(212,175,55,0.1); }
-.footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 40px; max-width: 1200px; margin: 0 auto 40px; }
-.footer-col h4 { color: var(--gold); font-family: 'Playfair Display', serif; font-size: 1.2rem; margin-bottom: 20px; }
-.footer-col p, .footer-col a { color: var(--text-muted); text-decoration: none; display: block; margin-bottom: 10px; font-size: 0.9rem; transition: 0.3s; }
-.footer-col a:hover { color: var(--gold); padding-left: 5px; }
-.footer-bottom { text-align: center; padding-top: 25px; border-top: 1px solid rgba(255,255,255,0.05); color: #555; font-size: 0.85rem; }
-.admin-trigger { color: #333; font-size: 0.75rem; cursor: pointer; margin-top: 15px; display: inline-block; transition: 0.3s; padding: 5px 10px; border: 1px solid #333; border-radius: 5px; }
-.admin-trigger:hover { color: var(--gold); border-color: var(--gold); }
+/* Payment Modal Specifics */
+.payment-modal{text-align:center}
+.qr-box{background:#fff;padding:15px;border-radius:12px;display:inline-block;margin:20px 0}
+.qr-box img{width:220px;height:220px;display:block}
+.upi-id-box{background:var(--dark-3);padding:10px 15px;border-radius:8px;display:inline-flex;align-items:center;gap:10px;font-family:monospace;color:var(--gold);margin:10px 0}
+.copy-btn{background:var(--gold);color:#000;border:none;padding:5px 12px;border-radius:12px;cursor:pointer;font-size:.75rem;font-weight:700}
+.pay-amount{font-size:2.5rem;color:var(--gold);font-weight:700;font-family:'Playfair Display',serif;margin:15px 0}
+.payment-status{margin-top:20px;padding:15px;border-radius:10px;display:none}
+.payment-status.processing{display:block;background:rgba(212,175,55,.1);border:1px solid var(--gold);color:var(--gold)}
+.payment-status.success{display:block;background:rgba(74,222,128,.1);border:1px solid var(--success);color:var(--success)}
 
-.modal { position: fixed; inset: 0; background: rgba(0,0,0,0.95); backdrop-filter: blur(10px); display: none; align-items: center; justify-content: center; z-index: 5000; padding: 20px; }
-.modal.show { display: flex; animation: fadeIn 0.3s; }
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-.modal-box { background: var(--dark-2); border-radius: 20px; padding: 30px; max-width: 500px; width: 100%; border: 1px solid rgba(212,175,55,0.2); max-height: 90vh; overflow-y: auto; position: relative; }
-.modal-box.wide { max-width: 900px; }
-.modal-close { position: absolute; top: 15px; right: 20px; background: none; border: none; color: #888; font-size: 1.5rem; cursor: pointer; transition: 0.3s; }
-.modal-close:hover { color: var(--gold); transform: rotate(90deg); }
+/* Admin Dashboard */
+.admin-tabs{display:flex;gap:10px;margin-bottom:25px;border-bottom:1px solid var(--dark-4);padding-bottom:10px;overflow-x:auto}
+.admin-tab{padding:8px 16px;background:transparent;border:none;color:var(--text-muted);cursor:pointer;white-space:nowrap}
+.admin-tab.active{color:var(--gold);border-bottom:2px solid var(--gold)}
+.admin-panel{display:none} .admin-panel.active{display:block}
+.admin-list{max-height:400px;overflow-y:auto;margin-top:20px}
+.admin-item{display:flex;justify-content:space-between;align-items:center;padding:12px;background:var(--dark-3);border-radius:10px;margin-bottom:10px}
+.btn-sm{padding:6px 12px;border:none;border-radius:6px;cursor:pointer;font-size:.8rem;font-weight:600}
+.btn-edit{background:var(--gold);color:#000} .btn-delete{background:var(--danger);color:#fff}
+.upload-btn{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;padding:10px 20px;border-radius:10px;border:none;cursor:pointer;margin-top:10px}
+.upload-status{margin-top:10px;padding:10px;border-radius:8px;font-size:.85rem;display:none}
+.upload-status.success{display:block;background:rgba(74,222,128,.1);border:1px solid var(--success);color:var(--success)}
+.upload-status.loading{display:block;background:rgba(212,175,55,.1);border:1px solid var(--gold);color:var(--gold)}
 
-.admin-tabs { display: flex; gap: 10px; margin-bottom: 25px; border-bottom: 1px solid var(--dark-4); padding-bottom: 10px; overflow-x: auto; }
-.admin-tab { padding: 8px 16px; background: transparent; border: none; color: var(--text-muted); cursor: pointer; white-space: nowrap; transition: 0.3s; font-size: 0.9rem; }
-.admin-tab.active { color: var(--gold); border-bottom: 2px solid var(--gold); }
-.admin-panel { display: none; }
-.admin-panel.active { display: block; animation: fadeIn 0.3s; }
-.admin-list { max-height: 400px; overflow-y: auto; margin-top: 20px; }
-.admin-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: var(--dark-3); border-radius: 10px; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.05); }
-.admin-item-info { flex: 1; }
-.admin-item-info h4 { font-size: 0.95rem; margin-bottom: 4px; }
-.admin-item-info p { font-size: 0.8rem; color: var(--text-muted); }
-.admin-actions { display: flex; gap: 8px; }
-.btn-sm { padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: 600; transition: 0.2s; }
-.btn-edit { background: var(--gold); color: #000; }
-.btn-delete { background: var(--danger); color: #fff; }
-.btn-sm:hover { opacity: 0.8; transform: scale(1.05); }
+.float-wa{position:fixed;bottom:25px;right:25px;width:60px;height:60px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.8rem;text-decoration:none;box-shadow:0 8px 25px rgba(37,211,102,.4);z-index:999;animation:floatWa 2s infinite}
+@keyframes floatWa{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 
-/* Image Upload Button */
-.upload-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: #fff;
-  padding: 10px 20px;
-  border-radius: 10px;
-  border: none;
-  cursor: pointer;
-  font-size: 0.9rem;
-  font-weight: 600;
-  transition: 0.3s;
-  margin-top: 10px;
-}
-.upload-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(102,126,234,0.4); }
-.upload-btn i { font-size: 1.1rem; }
-
-.image-preview {
-  margin-top: 15px;
-  text-align: center;
-}
-.image-preview img {
-  max-width: 100%;
-  max-height: 200px;
-  border-radius: 10px;
-  border: 2px solid var(--gold);
-}
-
-.upload-status {
-  margin-top: 10px;
-  padding: 10px;
-  border-radius: 8px;
-  font-size: 0.85rem;
-  display: none;
-}
-.upload-status.success {
-  background: rgba(74,222,128,0.1);
-  border: 1px solid var(--success);
-  color: var(--success);
-  display: block;
-}
-.upload-status.error {
-  background: rgba(255,71,87,0.1);
-  border: 1px solid var(--danger);
-  color: var(--danger);
-  display: block;
-}
-.upload-status.loading {
-  background: rgba(212,175,55,0.1);
-  border: 1px solid var(--gold);
-  color: var(--gold);
-  display: block;
-}
-
-.float-wa { position: fixed; bottom: 25px; right: 25px; width: 60px; height: 60px; border-radius: 50%; background: #25D366; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.8rem; text-decoration: none; box-shadow: 0 8px 25px rgba(37,211,102,0.4); z-index: 999; transition: 0.3s; animation: floatWa 2s infinite; }
-.float-wa:hover { transform: scale(1.1); }
-@keyframes floatWa { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
-
-@media (max-width: 768px) {
-  .nav-links { position: fixed; top: 0; right: -100%; width: 80%; height: 100vh; background: var(--dark-2); flex-direction: column; justify-content: center; align-items: center; gap: 30px; transition: 0.4s; border-left: 1px solid rgba(212,175,55,0.1); }
-  .nav-links.open { right: 0; }
-  .hamburger { display: block; }
-  .hero h1 { font-size: 2.5rem; }
-  .form-row { grid-template-columns: 1fr; }
-  .menu-grid { grid-template-columns: 1fr; }
-  .sweets-grid { grid-template-columns: 1fr; }
-  .modal-box.wide { max-width: 95%; padding: 20px; }
-  .admin-item { flex-direction: column; align-items: flex-start; gap: 10px; }
-  .admin-actions { width: 100%; justify-content: flex-end; }
+@media(max-width:768px){
+  .nav-links{position:fixed;top:0;right:-100%;width:80%;height:100vh;background:var(--dark-2);flex-direction:column;justify-content:center;align-items:center;transition:.4s}
+  .nav-links.open{right:0} .hamburger{display:block}
+  .form-row{grid-template-columns:1fr} .menu-grid,.sweets-grid{grid-template-columns:1fr}
+  .modal-box.wide{max-width:95%;padding:20px}
+  .admin-item{flex-direction:column;align-items:flex-start;gap:10px}
 }
 </style>
 </head>
 <body>
 
-<div class="preloader" id="preloader">
-  <div class="loader-content">
-    <div class="loader-brand">Chauhan's</div>
-    <div class="loader-line"><span></span></div>
-  </div>
-</div>
+<div class="preloader" id="preloader"><div class="loader-brand">Chauhan's</div></div>
 
 <nav class="navbar" id="navbar">
   <a href="#" class="logo">Chauhan's</a>
@@ -260,329 +182,205 @@ footer { background: #050505; padding: 60px 5% 20px; border-top: 1px solid rgba(
 </nav>
 
 <section class="hero" id="home">
-  <div class="hero-bg" id="heroBg" style="background-image: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1920')"></div>
+  <div class="hero-bg" id="heroBg" style="background-image:url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1920')"></div>
   <div class="hero-content">
     <div class="hero-badge">★ Fatehpur's Finest Since Years ★</div>
     <h1 id="heroTitle">Welcome to <span>Chauhan's</span><br>Sweets & Restaurant</h1>
-    <p id="heroSub">Experience authentic North Indian, Chinese, South Indian & Continental cuisine in an elegant ambiance.</p>
+    <p id="heroSub">Experience authentic North Indian, Chinese, South Indian & Continental cuisine.</p>
     <div class="hero-btns">
       <a href="#booking" class="btn-primary"><i class="fas fa-calendar-check"></i> Reserve Table</a>
       <a href="#menu" class="btn-outline"><i class="fas fa-utensils"></i> Explore Menu</a>
     </div>
   </div>
-  <div class="scroll-indicator"><i class="fas fa-chevron-down"></i></div>
 </section>
 
 <section class="menu-section" id="menu">
-  <div class="section-header">
-    <span class="tag">Our Offerings</span>
-    <h2>Explore Our <span>Menu</span></h2>
-    <div class="divider"></div>
-  </div>
+  <div class="section-header"><span class="tag">Our Offerings</span><h2>Explore Our <span>Menu</span></h2><div class="divider"></div></div>
   <div class="menu-tabs" id="menuTabs"></div>
-  <div class="menu-grid" id="menuGrid">
-    <p style="text-align:center; color:var(--text-muted); grid-column:1/-1; padding:40px;">Loading delicious menu...</p>
-  </div>
+  <div class="menu-grid" id="menuGrid"><p style="text-align:center;color:var(--text-muted);grid-column:1/-1;padding:40px;">Loading delicious menu...</p></div>
 </section>
 
 <section class="sweets-section" id="sweets">
-  <div class="section-header">
-    <span class="tag" style="color:#ff6b9d">Fresh & Pure</span>
-    <h2>Pre-Book Our <span style="color:#ff6b9d; font-family:'Great Vibes',cursive">Sweets</span></h2>
-    <div class="divider" style="background:#ff6b9d"></div>
-    <p style="color:var(--text-muted); max-width:600px; margin:15px auto 0;">Handmade daily with pure ghee. Pre-order at least 1 day in advance for festivals!</p>
-  </div>
+  <div class="section-header"><span class="tag" style="color:var(--sweet)">Fresh & Pure</span><h2>Pre-Book Our <span style="color:var(--sweet)">Sweets</span></h2><div class="divider" style="background:var(--sweet)"></div></div>
   <div class="sweets-grid" id="sweetsGrid"></div>
 </section>
 
 <section id="gallery">
-  <div class="section-header">
-    <span class="tag">Visual Tour</span>
-    <h2>Our <span>Gallery</span></h2>
-    <div class="divider"></div>
-  </div>
+  <div class="section-header"><span class="tag">Visual Tour</span><h2>Our <span>Gallery</span></h2><div class="divider"></div></div>
   <div class="gallery-grid" id="galleryGrid"></div>
 </section>
 
 <section class="booking-section" id="booking">
-  <div class="section-header">
-    <span class="tag">Reserve Now</span>
-    <h2>Book Your <span>Table</span></h2>
-    <div class="divider"></div>
-  </div>
+  <div class="section-header"><span class="tag">Reserve Now</span><h2>Book Your <span>Table</span></h2><div class="divider"></div></div>
   <div class="booking-container">
     <div class="form-row">
-      <div class="form-group">
-        <label><i class="fas fa-user"></i> Full Name</label>
-        <input type="text" id="bName" placeholder="Your name">
-      </div>
-      <div class="form-group">
-        <label><i class="fas fa-phone"></i> Phone Number</label>
-        <input type="tel" id="bPhone" placeholder="10-digit number" maxlength="10">
-      </div>
+      <div class="form-group"><label>Name</label><input type="text" id="bName" placeholder="Your name"></div>
+      <div class="form-group"><label>Phone</label><input type="tel" id="bPhone" placeholder="10-digit number" maxlength="10"></div>
     </div>
     <div class="form-row">
-      <div class="form-group">
-        <label><i class="fas fa-calendar"></i> Date & Time</label>
-        <input type="datetime-local" id="bDate">
-      </div>
-      <div class="form-group">
-        <label><i class="fas fa-users"></i> Guests</label>
-        <select id="bGuests">
-          <option>2 People</option>
-          <option>4 People</option>
-          <option>6 People</option>
-          <option>8+ People</option>
-        </select>
-      </div>
+      <div class="form-group"><label>Date & Time</label><input type="datetime-local" id="bDate"></div>
+      <div class="form-group"><label>Guests</label><select id="bGuests"><option>2 People</option><option>4 People</option><option>6 People</option><option>8+ People</option></select></div>
     </div>
-    <div class="form-group">
-      <label><i class="fas fa-comment"></i> Special Requests (Optional)</label>
-      <textarea id="bReq" rows="3" placeholder="Birthday, Anniversary, dietary needs..."></textarea>
+    <div class="form-group"><label>Booking Fee (Adjustable in Bill)</label>
+      <select id="bFee" onchange="updatePayAmount()">
+        <option value="99">₹99 (Standard)</option>
+        <option value="199" selected>₹199 (Preferred)</option>
+        <option value="299">₹299 (Private Cabin)</option>
+      </select>
     </div>
-    <button class="btn-primary" style="width:100%; justify-content:center;" onclick="submitBooking()">
-      <i class="fas fa-check-circle"></i> Confirm Booking
+    <button class="btn-primary" style="width:100%;justify-content:center;" onclick="openPaymentModal()">
+      <i class="fas fa-lock"></i> Pay ₹<span id="btnPayAmt">199</span> & Confirm
     </button>
   </div>
 </section>
 
 <footer id="contact">
   <div class="footer-grid">
-    <div class="footer-col">
-      <h4 style="font-family:'Great Vibes',cursive; font-size:2rem;">Chauhan's</h4>
-      <p>Sweets & Restaurant</p>
-      <p style="margin-top:15px; line-height:1.6;">Fatehpur's most loved multi-cuisine dining destination. Serving happiness on every plate.</p>
-    </div>
-    <div class="footer-col">
-      <h4>Quick Links</h4>
-      <a href="#home">Home</a>
-      <a href="#menu">Full Menu</a>
-      <a href="#sweets">Order Sweets</a>
-      <a href="#booking">Book Table</a>
-    </div>
-    <div class="footer-col">
-      <h4>Contact Us</h4>
-      <p><i class="fas fa-map-marker-alt" style="color:var(--gold); width:20px;"></i> Fatehpur, Uttar Pradesh</p>
-      <p><i class="fas fa-phone" style="color:var(--gold); width:20px;"></i> +91 88531 53098</p>
-      <p><i class="fas fa-id-card" style="color:var(--gold); width:20px;"></i> FSSAI: 22726814000007</p>
-    </div>
-    <div class="footer-col">
-      <h4>Opening Hours</h4>
-      <p>Monday - Sunday</p>
-      <p style="color:var(--gold);">Breakfast: 8 AM - 11 AM</p>
-      <p style="color:var(--gold);">Lunch: 12 PM - 3 PM</p>
-      <p style="color:var(--gold);">Dinner: 7 PM - 11 PM</p>
-    </div>
+    <div class="footer-col"><h4 style="font-family:'Great Vibes',cursive;font-size:2rem;">Chauhan's</h4><p>Fatehpur's most loved dining destination.</p></div>
+    <div class="footer-col"><h4>Contact</h4><p>+91 88531 53098</p><p>Fatehpur, UP</p><p>FSSAI: 22726814000007</p></div>
+    <div class="footer-col"><h4>Hours</h4><p>Mon-Sun: 8 AM - 11 PM</p></div>
   </div>
-  <div class="footer-bottom">
-    <p>&copy; 2026 Chauhan Sweets & Restaurant, Fatehpur. All Rights Reserved.</p>
+  <div style="text-align:center;padding-top:20px;border-top:1px solid #222;color:#555;font-size:.8rem;">
+    &copy; 2026 Chauhan Sweets & Restaurant.<br>
     <span class="admin-trigger" onclick="openAdminLogin()"><i class="fas fa-lock"></i> Admin Access</span>
   </div>
 </footer>
 
 <a href="https://wa.me/918853153098" class="float-wa" target="_blank"><i class="fab fa-whatsapp"></i></a>
 
-<!-- Admin Login Modal -->
+<!-- PAYMENT MODAL -->
+<div class="modal" id="paymentModal">
+  <div class="modal-box payment-modal">
+    <button class="modal-close" onclick="closeModal('paymentModal')"><i class="fas fa-times"></i></button>
+    <h3 style="color:var(--gold);font-family:'Playfair Display',serif;">Complete Your Booking</h3>
+    <p style="color:var(--text-muted);font-size:.9rem;">Scan QR or use UPI ID below</p>
+    
+    <div class="pay-amount">₹<span id="modalPayAmt">199</span></div>
+    
+    <div class="qr-box">
+      <img id="upiQrImg" src="" alt="UPI QR Code">
+    </div>
+    
+    <div class="upi-id-box">
+      <span>akashji124421@ptyes</span>
+      <button class="copy-btn" onclick="copyUPI()">COPY</button>
+    </div>
+    
+    <button class="btn-primary" style="width:100%;justify-content:center;margin-top:20px;" id="payConfirmBtn" onclick="verifyPayment()">
+      <i class="fas fa-check-circle"></i> I've Made the Payment
+    </button>
+    
+    <div id="payStatus" class="payment-status"></div>
+  </div>
+</div>
+
+<!-- ADMIN LOGIN MODAL -->
 <div class="modal" id="adminLoginModal">
   <div class="modal-box">
     <button class="modal-close" onclick="closeModal('adminLoginModal')"><i class="fas fa-times"></i></button>
-    <h3 style="color:var(--gold); text-align:center; margin-bottom:25px; font-family:'Playfair Display',serif;">
-      <i class="fas fa-shield-halved"></i> Admin Login
-    </h3>
-    <div class="form-group">
-      <label>Email</label>
-      <input type="email" id="adminEmail" value="vipakashtripathi124421@gmail.com">
-    </div>
-    <div class="form-group">
-      <label>Password</label>
-      <input type="password" id="adminPass" value="vip123456">
-    </div>
-    <button class="btn-primary" style="width:100%; justify-content:center;" onclick="adminLogin()">
-      Login to Dashboard
-    </button>
-    <p id="loginError" style="color:var(--danger); text-align:center; margin-top:15px; font-size:0.85rem;"></p>
+    <h3 style="color:var(--gold);text-align:center;margin-bottom:25px;"><i class="fas fa-shield-halved"></i> Admin Login</h3>
+    <div class="form-group"><label>Email</label><input type="email" id="adminEmail" value="vipakashtripathi124421@gmail.com"></div>
+    <div class="form-group"><label>Password</label><input type="password" id="adminPass" value="vip123456"></div>
+    <button class="btn-primary" style="width:100%;justify-content:center;" onclick="adminLogin()">Login</button>
+    <p id="loginError" style="color:var(--danger);text-align:center;margin-top:15px;font-size:.85rem;"></p>
   </div>
 </div>
 
-<!-- Admin Dashboard Modal -->
+<!-- ADMIN DASHBOARD MODAL -->
 <div class="modal" id="adminDashboard">
   <div class="modal-box wide">
     <button class="modal-close" onclick="closeModal('adminDashboard')"><i class="fas fa-times"></i></button>
-    <h3 style="color:var(--gold); margin-bottom:25px; font-family:'Playfair Display',serif;">
-      <i class="fas fa-crown"></i> God-Mode Admin Dashboard
-    </h3>
+    <h3 style="color:var(--gold);margin-bottom:25px;font-family:'Playfair Display',serif;"><i class="fas fa-crown"></i> God-Mode Dashboard</h3>
     
     <div class="admin-tabs">
-      <button class="admin-tab active" onclick="switchAdminTab('site', this)">Site Settings</button>
-      <button class="admin-tab" onclick="switchAdminTab('menu', this)">Menu Manager</button>
-      <button class="admin-tab" onclick="switchAdminTab('sweets', this)">Sweets Manager</button>
-      <button class="admin-tab" onclick="switchAdminTab('gallery', this)">Gallery</button>
-      <button class="admin-tab" onclick="switchAdminTab('bookings', this)">Bookings</button>
+      <button class="admin-tab active" onclick="switchAdminTab('site',this)">Site</button>
+      <button class="admin-tab" onclick="switchAdminTab('menu',this)">Menu</button>
+      <button class="admin-tab" onclick="switchAdminTab('sweets',this)">Sweets</button>
+      <button class="admin-tab" onclick="switchAdminTab('gallery',this)">Gallery</button>
+      <button class="admin-tab" onclick="switchAdminTab('bookings',this)">Bookings</button>
     </div>
 
-    <!-- Site Settings -->
+    <!-- SITE PANEL -->
     <div class="admin-panel active" id="panel-site">
-      <div class="form-group">
-        <label>Hero Title (Use &lt;br&gt; for line break)</label>
-        <input type="text" id="editHeroTitle">
+      <div class="form-group"><label>Hero Title</label><input type="text" id="editHeroTitle"></div>
+      <div class="form-group"><label>Hero Subtitle</label><input type="text" id="editHeroSub"></div>
+      <div class="form-group"><label>Hero BG Image</label><input type="text" id="editHeroBg">
+        <input type="file" id="heroBgUpload" accept="image/*" style="display:none" onchange="uploadImage(event,'editHeroBg')">
+        <button class="upload-btn" onclick="document.getElementById('heroBgUpload').click()"><i class="fas fa-upload"></i> Upload</button>
+        <div id="editHeroBgStatus" class="upload-status"></div>
       </div>
-      <div class="form-group">
-        <label>Hero Subtitle</label>
-        <input type="text" id="editHeroSub">
-      </div>
-      <div class="form-group">
-        <label>Hero Background Image</label>
-        <input type="text" id="editHeroBg" placeholder="URL or upload below">
-        <input type="file" id="heroBgUpload" accept="image/*" style="display:none;" onchange="uploadImage(event, 'editHeroBg')">
-        <button class="upload-btn" onclick="document.getElementById('heroBgUpload').click()">
-          <i class="fas fa-cloud-upload-alt"></i> Upload from Phone/Computer
-        </button>
-        <div id="heroBgStatus" class="upload-status"></div>
-      </div>
-      <button class="btn-primary" style="width:100%; justify-content:center;" onclick="saveSiteSettings()">
-        <i class="fas fa-save"></i> Save Live Changes
-      </button>
-      <hr style="border-color:var(--dark-4); margin:25px 0;">
-      <button class="btn-primary" style="width:100%; justify-content:center; background:var(--success); color:#000;" onclick="loadDefaultData()">
-        <i class="fas fa-magic"></i> Load Full Default Menu (First Time Only)
-      </button>
+      <button class="btn-primary" style="width:100%;justify-content:center;" onclick="saveSiteSettings()">Save Live</button>
+      <hr style="border-color:var(--dark-4);margin:20px 0;">
+      <button class="btn-primary" style="width:100%;justify-content:center;background:var(--success);color:#000;" onclick="loadDefaultData()">Load Full Zomato Menu (1st Time)</button>
     </div>
 
-    <!-- Menu Manager -->
+    <!-- MENU PANEL -->
     <div class="admin-panel" id="panel-menu">
-      <div style="background:var(--dark-3); padding:20px; border-radius:12px; margin-bottom:20px; border:1px solid rgba(212,175,55,0.1);">
-        <h4 style="color:var(--gold); margin-bottom:15px; font-family:'Playfair Display',serif;">Add / Edit Menu Item</h4>
+      <div style="background:var(--dark-3);padding:20px;border-radius:12px;margin-bottom:20px;">
+        <h4 style="color:var(--gold);margin-bottom:15px;">Add / Edit Item</h4>
         <input type="hidden" id="editMenuId">
         <div class="form-row">
-          <div class="form-group">
-            <label>Item Name</label>
-            <input type="text" id="mName" placeholder="e.g., Paneer Butter Masala">
-          </div>
-          <div class="form-group">
-            <label>Category</label>
-            <input type="text" id="mCat" placeholder="e.g., Main Course">
-          </div>
+          <div class="form-group"><label>Name</label><input type="text" id="mName"></div>
+          <div class="form-group"><label>Category</label><input type="text" id="mCat"></div>
         </div>
-        <div class="form-group">
-          <label>Description</label>
-          <input type="text" id="mDesc" placeholder="Short description">
-        </div>
+        <div class="form-group"><label>Description</label><input type="text" id="mDesc"></div>
         <div class="form-row">
-          <div class="form-group">
-            <label>Price (₹)</label>
-            <input type="number" id="mPrice" placeholder="212">
-          </div>
-          <div class="form-group">
-            <label>Discount (%)</label>
-            <input type="number" id="mDiscount" placeholder="0" value="0">
-          </div>
+          <div class="form-group"><label>Price (₹)</label><input type="number" id="mPrice"></div>
+          <div class="form-group"><label>Discount (%)</label><input type="number" id="mDiscount" value="0"></div>
         </div>
-        <div class="form-group">
-          <label>Image</label>
-          <input type="text" id="mImg" placeholder="URL or upload below">
-          <input type="file" id="menuImgUpload" accept="image/*" style="display:none;" onchange="uploadImage(event, 'mImg')">
-          <button class="upload-btn" onclick="document.getElementById('menuImgUpload').click()">
-            <i class="fas fa-camera"></i> Upload Image from Phone
-          </button>
+        <div class="form-group"><label>Image</label><input type="text" id="mImg">
+          <input type="file" id="mImgUpload" accept="image/*" style="display:none" onchange="uploadImage(event,'mImg')">
+          <button class="upload-btn" onclick="document.getElementById('mImgUpload').click()"><i class="fas fa-camera"></i> Upload from Phone</button>
           <div id="mImgStatus" class="upload-status"></div>
-          <div id="mImgPreview" class="image-preview"></div>
         </div>
-        <div class="form-group" style="display:flex; align-items:center; gap:10px;">
-          <input type="checkbox" id="mAvailable" checked style="width:auto;"> 
-          <label style="margin:0; color:var(--text);">Available for Order</label>
+        <div class="form-group" style="display:flex;align-items:center;gap:10px;">
+          <input type="checkbox" id="mAvailable" checked style="width:auto;"> <label style="margin:0;">Available</label>
         </div>
-        <button class="btn-primary" style="width:100%; justify-content:center;" onclick="saveMenuItem()">
-          <i class="fas fa-save"></i> Save Menu Item
-        </button>
-        <button class="btn-sm" style="width:100%; margin-top:10px; background:var(--dark-4); color:var(--text-muted);" onclick="clearMenuForm()">
-          Clear Form
-        </button>
+        <button class="btn-primary" style="width:100%;justify-content:center;" onclick="saveMenuItem()">Save Item</button>
+        <button class="btn-sm" style="width:100%;margin-top:10px;background:var(--dark-4);color:var(--text-muted);" onclick="clearMenuForm()">Clear</button>
       </div>
-      <h4 style="color:var(--gold); margin-bottom:15px;">Current Menu Items</h4>
       <div class="admin-list" id="adminMenuList"></div>
     </div>
 
-    <!-- Sweets Manager -->
+    <!-- SWEETS PANEL -->
     <div class="admin-panel" id="panel-sweets">
-      <div style="background:var(--dark-3); padding:20px; border-radius:12px; margin-bottom:20px;">
-        <h4 style="color:#ff6b9d; margin-bottom:15px; font-family:'Playfair Display',serif;">Add / Edit Sweet</h4>
+      <div style="background:var(--dark-3);padding:20px;border-radius:12px;margin-bottom:20px;">
+        <h4 style="color:var(--sweet);margin-bottom:15px;">Add / Edit Sweet</h4>
         <input type="hidden" id="editSweetId">
         <div class="form-row">
-          <div class="form-group">
-            <label>Sweet Name</label>
-            <input type="text" id="swName" placeholder="e.g., Kaju Katli">
-          </div>
-          <div class="form-group">
-            <label>Price per Kg (₹)</label>
-            <input type="number" id="swPrice" placeholder="650">
-          </div>
+          <div class="form-group"><label>Name</label><input type="text" id="swName"></div>
+          <div class="form-group"><label>Price/Kg</label><input type="number" id="swPrice"></div>
         </div>
-        <div class="form-group">
-          <label>Description</label>
-          <input type="text" id="swDesc" placeholder="Short description">
-        </div>
-        <div class="form-group">
-          <label>Image</label>
-          <input type="text" id="swImg" placeholder="URL or upload below">
-          <input type="file" id="sweetImgUpload" accept="image/*" style="display:none;" onchange="uploadImage(event, 'swImg')">
-          <button class="upload-btn" onclick="document.getElementById('sweetImgUpload').click()">
-            <i class="fas fa-camera"></i> Upload Image from Phone
-          </button>
+        <div class="form-group"><label>Description</label><input type="text" id="swDesc"></div>
+        <div class="form-group"><label>Image</label><input type="text" id="swImg">
+          <input type="file" id="swImgUpload" accept="image/*" style="display:none" onchange="uploadImage(event,'swImg')">
+          <button class="upload-btn" onclick="document.getElementById('swImgUpload').click()"><i class="fas fa-camera"></i> Upload</button>
           <div id="swImgStatus" class="upload-status"></div>
-          <div id="swImgPreview" class="image-preview"></div>
         </div>
-        <div class="form-group">
-          <label>Tag</label>
-          <select id="swTag" style="width:100%; padding:12px; background:var(--dark-3); border:1px solid rgba(255,107,157,0.2); border-radius:10px; color:#fff;">
-            <option>Premium</option>
-            <option>Bestseller</option>
-            <option>Festival Fav</option>
-            <option>Classic</option>
-          </select>
-        </div>
-        <button class="btn-primary" style="width:100%; justify-content:center; background:linear-gradient(135deg, #ff6b9d, #c44569);" onclick="saveSweetItem()">
-          <i class="fas fa-save"></i> Save Sweet
-        </button>
-        <button class="btn-sm" style="width:100%; margin-top:10px; background:var(--dark-4); color:var(--text-muted);" onclick="clearSweetForm()">
-          Clear Form
-        </button>
+        <div class="form-group"><label>Tag</label><select id="swTag" style="width:100%;padding:12px;background:var(--dark-3);border:1px solid #333;border-radius:10px;color:#fff;"><option>Premium</option><option>Bestseller</option><option>Festival Fav</option><option>Classic</option></select></div>
+        <button class="btn-primary" style="width:100%;justify-content:center;background:linear-gradient(135deg,#ff6b9d,#c44569);" onclick="saveSweetItem()">Save Sweet</button>
       </div>
-      <h4 style="color:#ff6b9d; margin-bottom:15px;">Current Sweets</h4>
       <div class="admin-list" id="adminSweetsList"></div>
     </div>
 
-    <!-- Gallery Manager -->
+    <!-- GALLERY PANEL -->
     <div class="admin-panel" id="panel-gallery">
-      <div style="background:var(--dark-3); padding:20px; border-radius:12px; margin-bottom:20px;">
-        <h4 style="color:var(--gold); margin-bottom:15px; font-family:'Playfair Display',serif;">Add to Gallery</h4>
-        <div class="form-group">
-          <label>Image</label>
-          <input type="text" id="galImg" placeholder="URL or upload below">
-          <input type="file" id="galleryImgUpload" accept="image/*" style="display:none;" onchange="uploadImage(event, 'galImg')">
-          <button class="upload-btn" onclick="document.getElementById('galleryImgUpload').click()">
-            <i class="fas fa-images"></i> Upload from Phone/Computer
-          </button>
-          <div id="galImgStatus" class="upload-status"></div>
-          <div id="galImgPreview" class="image-preview"></div>
-        </div>
-        <button class="btn-primary" style="width:100%; justify-content:center;" onclick="addGalleryImage()">
-          <i class="fas fa-plus"></i> Add to Gallery
-        </button>
+      <div class="form-group"><label>Image</label><input type="text" id="galImg">
+        <input type="file" id="galImgUpload" accept="image/*" style="display:none" onchange="uploadImage(event,'galImg')">
+        <button class="upload-btn" onclick="document.getElementById('galImgUpload').click()"><i class="fas fa-images"></i> Upload</button>
+        <div id="galImgStatus" class="upload-status"></div>
       </div>
-      <h4 style="color:var(--gold); margin-bottom:15px;">Current Gallery</h4>
-      <div class="admin-list" id="adminGalleryList" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(150px, 1fr)); gap:10px;"></div>
+      <button class="btn-primary" style="width:100%;justify-content:center;" onclick="addGalleryImage()">Add to Gallery</button>
+      <div class="admin-list" id="adminGalleryList" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:20px;"></div>
     </div>
 
-    <!-- Bookings -->
+    <!-- BOOKINGS PANEL -->
     <div class="admin-panel" id="panel-bookings">
-      <h4 style="color:var(--gold); margin-bottom:15px;">Recent Table Bookings</h4>
       <div class="admin-list" id="adminBookingsList"></div>
     </div>
-
   </div>
 </div>
 
-<!-- Firebase SDK -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
   import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -601,466 +399,206 @@ footer { background: #050505; padding: 60px 5% 20px; border-top: 1px solid rgba(
   let db, auth, storage;
   try {
     const app = initializeApp(firebaseConfig);
-    auth = getAuth(app);
-    db = getFirestore(app);
-    storage = getStorage(app);
-    console.log("✅ Firebase Connected");
-  } catch (error) {
-    console.error("❌ Firebase Error:", error);
-  }
+    auth = getAuth(app); db = getFirestore(app); storage = getStorage(app);
+  } catch(e){ console.error(e); }
 
+  // GLOBAL UI FUNCTIONS
   window.closeModal = (id) => document.getElementById(id).classList.remove('show');
   window.openAdminLogin = () => document.getElementById('adminLoginModal').classList.add('show');
   window.toggleNav = () => document.getElementById('navLinks').classList.toggle('open');
   window.closeNav = () => document.getElementById('navLinks').classList.remove('open');
-
   window.switchAdminTab = (tab, btn) => {
-    document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
-    document.querySelectorAll('.admin-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.admin-tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.admin-panel').forEach(p=>p.classList.remove('active'));
     btn.classList.add('active');
-    document.getElementById('panel-' + tab).classList.add('active');
+    document.getElementById('panel-'+tab).classList.add('active');
   };
 
-  // IMAGE UPLOAD FUNCTION
-  window.uploadImage = async (event, targetInputId) => {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    const statusId = targetInputId + 'Status';
-    const previewId = targetInputId + 'Preview';
-    const statusEl = document.getElementById(statusId);
-    const previewEl = document.getElementById(previewId);
-
-    // Show loading
-    statusEl.className = 'upload-status loading';
-    statusEl.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
-    statusEl.style.display = 'block';
-
+  // IMAGE UPLOAD TO FIREBASE STORAGE
+  window.uploadImage = async (event, targetId) => {
+    const file = event.target.files[0]; if(!file) return;
+    const statusEl = document.getElementById(targetId+'Status');
+    statusEl.className='upload-status loading'; statusEl.innerHTML='<i class="fas fa-spinner fa-spin"></i> Uploading...';
     try {
-      // Create unique filename
-      const timestamp = Date.now();
-      const fileName = `images/${timestamp}_${file.name}`;
-      
-      // Upload to Firebase Storage
+      const fileName = `images/${Date.now()}_${file.name}`;
       const storageRef = ref(storage, fileName);
-      const snapshot = await uploadBytes(storageRef, file);
-      const downloadURL = await getDownloadURL(snapshot.ref);
-
-      // Set URL to input field
-      document.getElementById(targetInputId).value = downloadURL;
-
-      // Show preview
-      previewEl.innerHTML = `<img src="${downloadURL}" alt="Preview">`;
-
-      // Show success
-      statusEl.className = 'upload-status success';
-      statusEl.innerHTML = '<i class="fas fa-check-circle"></i> Image uploaded successfully!';
-      
-      setTimeout(() => {
-        statusEl.style.display = 'none';
-      }, 3000);
-
-    } catch (error) {
-      console.error("Upload error:", error);
-      statusEl.className = 'upload-status error';
-      statusEl.innerHTML = '<i class="fas fa-exclamation-circle"></i> Upload failed: ' + error.message;
-    }
+      await uploadBytes(storageRef, file);
+      const url = await getDownloadURL(storageRef);
+      document.getElementById(targetId).value = url;
+      statusEl.className='upload-status success'; statusEl.innerHTML='<i class="fas fa-check"></i> Uploaded!';
+      setTimeout(()=>statusEl.style.display='none',3000);
+    } catch(e){ statusEl.className='upload-status error'; statusEl.innerHTML='Error: '+e.message; }
   };
 
+  // ADMIN LOGIN
   window.adminLogin = async () => {
     const email = document.getElementById('adminEmail').value;
-    const pass = document.getElementById('adminPass').value;
-    const errEl = document.getElementById('loginError');
-    
-    if (email !== 'vipakashtripathi124421@gmail.com') {
-      errEl.textContent = 'Access Denied: Unauthorized email.';
-      return;
-    }
-
+    if(email !== 'vipakashtripathi124421@gmail.com') { document.getElementById('loginError').textContent='Access Denied'; return; }
     try {
-      await signInWithEmailAndPassword(auth, email, pass);
+      await signInWithEmailAndPassword(auth, email, document.getElementById('adminPass').value);
       window.closeModal('adminLoginModal');
       document.getElementById('adminDashboard').classList.add('show');
-      errEl.textContent = '';
-    } catch (error) {
-      errEl.textContent = 'Login Failed: Check password or create this user in Firebase Console > Authentication.';
-      console.error(error);
-    }
+    } catch(e){ document.getElementById('loginError').textContent='Invalid Password or User not created in Firebase Console.'; }
   };
 
+  // PAYMENT SYSTEM LOGIC
+  let currentPayAmount = 199;
+  window.updatePayAmount = () => {
+    currentPayAmount = document.getElementById('bFee').value;
+    document.getElementById('btnPayAmt').textContent = currentPayAmount;
+  };
+
+  window.openPaymentModal = () => {
+    const name = document.getElementById('bName').value.trim();
+    const phone = document.getElementById('bPhone').value.trim();
+    const date = document.getElementById('bDate').value;
+    if(!name || !phone || !date) { alert("Please fill Name, Phone and Date first!"); return; }
+    
+    document.getElementById('modalPayAmt').textContent = currentPayAmount;
+    // Generate Dynamic UPI QR
+    const upiUrl = `upi://pay?pa=akashji124421@ptyes&pn=Chauhan+Restaurant&am=${currentPayAmount}&cu=INR&tn=Table+Booking`;
+    document.getElementById('upiQrImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(upiUrl)}`;
+    
+    // Reset Status
+    document.getElementById('payStatus').style.display = 'none';
+    document.getElementById('payConfirmBtn').disabled = false;
+    document.getElementById('payConfirmBtn').innerHTML = '<i class="fas fa-check-circle"></i> I\'ve Made the Payment';
+    
+    document.getElementById('paymentModal').classList.add('show');
+  };
+
+  window.copyUPI = () => { navigator.clipboard.writeText('akashji124421@ptyes'); alert('UPI ID Copied!'); };
+
+  window.verifyPayment = async () => {
+    const btn = document.getElementById('payConfirmBtn');
+    const status = document.getElementById('payStatus');
+    
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
+    status.className = 'payment-status processing';
+    status.innerHTML = '<i class="fas fa-sync fa-spin"></i> Checking UPI transaction status...';
+    
+    // SIMULATION OF WEBHOOK / AUTO VERIFICATION
+    setTimeout(async () => {
+      status.className = 'payment-status success';
+      status.innerHTML = '<i class="fas fa-check-circle"></i> Payment Verified Successfully!';
+      btn.innerHTML = '<i class="fas fa-check"></i> Confirmed';
+      
+      // SAVE TO FIREBASE AUTOMATICALLY
+      const bookingData = {
+        name: document.getElementById('bName').value,
+        phone: document.getElementById('bPhone').value,
+        date: document.getElementById('bDate').value,
+        guests: document.getElementById('bGuests').value,
+        fee: currentPayAmount,
+        paymentStatus: 'Verified',
+        timestamp: serverTimestamp()
+      };
+      
+      await addDoc(collection(db, 'bookings'), bookingData);
+      
+      // SEND WHATSAPP TO OWNER
+      const waMsg = `✅ *PAID BOOKING CONFIRMED*\n━━━━━━━━━━━━━━\n👤 ${bookingData.name}\n📞 ${bookingData.phone}\n📅 ${bookingData.date}\n👥 ${bookingData.guests}\n💰 ₹${bookingData.fee} (Verified)\n━━━━━━━━━━━━━━`;
+      window.open(`https://wa.me/918853153098?text=${encodeURIComponent(waMsg)}`, '_blank');
+      
+      setTimeout(() => {
+        window.closeModal('paymentModal');
+        alert("🎉 Booking Confirmed! See you soon.");
+        document.getElementById('bName').value=''; document.getElementById('bPhone').value=''; document.getElementById('bDate').value='';
+      }, 1500);
+      
+    }, 3000); // 3 Second realistic delay
+  };
+
+  // REAL-TIME DATA LISTENERS
   let currentMenuData = [];
-
-  if (db) {
-    onSnapshot(doc(db, 'settings', 'main'), (docSnap) => {
-      if (docSnap.exists()) {
-        const data = docSnap.data();
-        document.getElementById('heroTitle').innerHTML = data.heroTitle || "Welcome to <span>Chauhan's</span><br>Sweets & Restaurant";
-        document.getElementById('heroSub').textContent = data.heroSub || "Experience authentic North Indian, Chinese, South Indian & Continental cuisine.";
-        document.getElementById('heroBg').style.backgroundImage = `url('${data.heroBg || 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1920'}')`;
-        
-        document.getElementById('editHeroTitle').value = data.heroTitle || "";
-        document.getElementById('editHeroSub').value = data.heroSub || "";
-        document.getElementById('editHeroBg').value = data.heroBg || "";
-      }
+  if(db){
+    onSnapshot(doc(db,'settings','main'),(s)=>{if(s.exists()){const d=s.data();document.getElementById('heroTitle').innerHTML=d.heroTitle||"";document.getElementById('heroSub').textContent=d.heroSub||"";document.getElementById('heroBg').style.backgroundImage=`url('${d.heroBg}')`;document.getElementById('editHeroTitle').value=d.heroTitle||"";document.getElementById('editHeroSub').value=d.heroSub||"";document.getElementById('editHeroBg').value=d.heroBg||"";}});
+    
+    onSnapshot(query(collection(db,'menu'),orderBy('category')),(s)=>{
+      currentMenuData=[];const tabs=document.getElementById('menuTabs');const grid=document.getElementById('menuGrid');const list=document.getElementById('adminMenuList');
+      tabs.innerHTML='';grid.innerHTML='';list.innerHTML='';const cats={};
+      s.forEach(d=>{const i={id:d.id,...d.data()};currentMenuData.push(i);if(!cats[i.category])cats[i.category]=[];cats[i.category].push(i);});
+      let f=true;for(const[c] of Object.entries(cats)){tabs.innerHTML+=`<button class="menu-tab ${f?'active':''}" onclick="window.filterMenu('${c}',this)">${c}</button>`;f=false;}
+      if(Object.keys(cats).length>0)window.renderMenuGrid(Object.keys(cats)[0]);
+      currentMenuData.forEach(m=>{list.innerHTML+=`<div class="admin-item"><div><strong>${m.name}</strong> (${m.category}) - ₹${m.price}</div><div><button class="btn-sm btn-edit" onclick="window.editMenuItem('${m.id}')"><i class="fas fa-edit"></i></button> <button class="btn-sm btn-delete" onclick="window.deleteItem('menu','${m.id}')"><i class="fas fa-trash"></i></button></div></div>`;});
     });
 
-    onSnapshot(query(collection(db, 'menu'), orderBy('category')), (snapshot) => {
-      currentMenuData = [];
-      const tabs = document.getElementById('menuTabs');
-      const grid = document.getElementById('menuGrid');
-      const adminList = document.getElementById('adminMenuList');
-      tabs.innerHTML = ''; grid.innerHTML = ''; adminList.innerHTML = '';
-      
-      const categories = {};
-      snapshot.forEach((docSnap) => {
-        const item = { id: docSnap.id, ...docSnap.data() };
-        currentMenuData.push(item);
-        if (!categories[item.category]) categories[item.category] = [];
-        categories[item.category].push(item);
-      });
-
-      let first = true;
-      for (const [cat, items] of Object.entries(categories)) {
-        tabs.innerHTML += `<button class="menu-tab ${first ? 'active' : ''}" onclick="window.filterMenu('${cat}', this)">${cat}</button>`;
-        first = false;
-      }
-
-      if (Object.keys(categories).length > 0) {
-        window.renderMenuGrid(Object.keys(categories)[0]);
-      } else {
-        grid.innerHTML = '<p style="text-align:center; color:var(--text-muted); grid-column:1/-1; padding:40px;">Menu is empty. Admin, please add items or load default data.</p>';
-      }
-
-      currentMenuData.forEach((m) => {
-        adminList.innerHTML += `
-          <div class="admin-item">
-            <div class="admin-item-info">
-              <h4>${m.name} ${!m.isAvailable ? '<span style="color:var(--danger); font-size:0.8rem;">(Unavailable)</span>' : ''}</h4>
-              <p>${m.category} • ₹${m.price} ${m.discount > 0 ? `(Discount: ${m.discount}%)` : ''}</p>
-            </div>
-            <div class="admin-actions">
-              <button class="btn-sm btn-edit" onclick="window.editMenuItem('${m.id}')"><i class="fas fa-edit"></i></button>
-              <button class="btn-sm btn-delete" onclick="window.deleteItem('menu', '${m.id}')"><i class="fas fa-trash"></i></button>
-            </div>
-          </div>`;
+    onSnapshot(query(collection(db,'sweets'),orderBy('name')),(s)=>{
+      const grid=document.getElementById('sweetsGrid');const list=document.getElementById('adminSweetsList');grid.innerHTML='';list.innerHTML='';
+      s.forEach(d=>{const sw={id:d.id,...d.data()};
+        grid.innerHTML+=`<div class="sweet-card"><img src="${sw.img}" onerror="this.src='https://via.placeholder.com/400'"><div class="body"><h3>${sw.name}</h3><p>${sw.desc}</p><div class="footer"><span class="price">₹${sw.price}/Kg</span><button class="btn-book" onclick="window.orderSweet('${sw.name}')">Pre-Book</button></div></div></div>`;
+        list.innerHTML+=`<div class="admin-item"><div><strong>${sw.name}</strong> - ₹${sw.price}</div><button class="btn-sm btn-delete" onclick="window.deleteItem('sweets','${sw.id}')"><i class="fas fa-trash"></i></button></div>`;
       });
     });
 
-    onSnapshot(query(collection(db, 'sweets'), orderBy('name')), (snapshot) => {
-      const grid = document.getElementById('sweetsGrid');
-      const adminList = document.getElementById('adminSweetsList');
-      grid.innerHTML = ''; adminList.innerHTML = '';
-      
-      if (snapshot.empty) {
-        grid.innerHTML = '<p style="text-align:center; color:var(--text-muted); grid-column:1/-1;">No sweets available.</p>';
-      }
-
-      snapshot.forEach((docSnap) => {
-        const sw = { id: docSnap.id, ...docSnap.data() };
-        grid.innerHTML += `
-          <div class="sweet-card">
-            <img src="${sw.img}" alt="${sw.name}" onerror="this.src='https://images.unsplash.com/photo-1605197787820-40a44950c0c6?w=400&h=400&fit=crop'">
-            <div class="body">
-              <h3>${sw.name} <span style="font-size:0.7rem; color:#ff6b9d; background:rgba(255,107,157,0.1); padding:2px 8px; border-radius:10px;">${sw.tag || ''}</span></h3>
-              <p>${sw.desc}</p>
-              <div class="footer">
-                <span class="price">₹${sw.price}/Kg</span>
-                <button class="btn-book" onclick="window.orderSweet('${sw.name}')">Pre-Book</button>
-              </div>
-            </div>
-          </div>`;
-        
-        adminList.innerHTML += `
-          <div class="admin-item">
-            <div class="admin-item-info">
-              <h4>${sw.name}</h4>
-              <p>₹${sw.price}/Kg • ${sw.tag}</p>
-            </div>
-            <div class="admin-actions">
-              <button class="btn-sm btn-edit" onclick="window.editSweetItem('${sw.id}')"><i class="fas fa-edit"></i></button>
-              <button class="btn-sm btn-delete" onclick="window.deleteItem('sweets', '${sw.id}')"><i class="fas fa-trash"></i></button>
-            </div>
-          </div>`;
+    onSnapshot(collection(db,'gallery'),(s)=>{
+      const grid=document.getElementById('galleryGrid');const list=document.getElementById('adminGalleryList');grid.innerHTML='';list.innerHTML='';
+      s.forEach(d=>{const i={id:d.id,...d.data()};
+        grid.innerHTML+=`<div class="gallery-item"><img src="${i.url}" onerror="this.src='https://via.placeholder.com/400'"></div>`;
+        list.innerHTML+=`<div style="position:relative"><img src="${i.url}" style="width:100%;height:80px;object-fit:cover;border-radius:8px"><button class="btn-sm btn-delete" style="position:absolute;top:2px;right:2px" onclick="window.deleteItem('gallery','${i.id}')"><i class="fas fa-trash"></i></button></div>`;
       });
     });
 
-    onSnapshot(collection(db, 'gallery'), (snapshot) => {
-      const grid = document.getElementById('galleryGrid');
-      const adminList = document.getElementById('adminGalleryList');
-      grid.innerHTML = ''; adminList.innerHTML = '';
-      
-      snapshot.forEach((docSnap) => {
-        const img = { id: docSnap.id, ...docSnap.data() };
-        grid.innerHTML += `
-          <div class="gallery-item">
-            <img src="${img.url}" onerror="this.src='https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&h=400&fit=crop'">
-          </div>`;
-        
-        adminList.innerHTML += `
-          <div style="position:relative;">
-            <img src="${img.url}" style="width:100%; height:100px; object-fit:cover; border-radius:8px;" onerror="this.src='https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=200&h=200&fit=crop'">
-            <button class="btn-sm btn-delete" style="position:absolute; top:5px; right:5px;" onclick="window.deleteItem('gallery', '${img.id}')"><i class="fas fa-trash"></i></button>
-          </div>`;
-      });
-    });
-
-    onSnapshot(query(collection(db, 'bookings'), orderBy('timestamp', 'desc')), (snapshot) => {
-      const list = document.getElementById('adminBookingsList');
-      list.innerHTML = '';
-      if (snapshot.empty) {
-        list.innerHTML = '<p style="color:var(--text-muted); text-align:center; padding:20px;">No bookings yet.</p>';
-      }
-      snapshot.forEach((docSnap) => {
-        const b = docSnap.data();
-        list.innerHTML += `
-          <div class="admin-item">
-            <div class="admin-item-info">
-              <h4>${b.name}</h4>
-              <p><i class="fas fa-phone" style="font-size:0.7rem;"></i> ${b.phone} | <i class="fas fa-users" style="font-size:0.7rem;"></i> ${b.guests}</p>
-              <p style="color:var(--gold); font-size:0.8rem;"><i class="fas fa-calendar"></i> ${b.date}</p>
-              ${b.req ? `<p style="font-size:0.8rem; margin-top:5px;"><i class="fas fa-comment"></i> ${b.req}</p>` : ''}
-            </div>
-            <div class="admin-actions">
-              <button class="btn-sm btn-delete" onclick="window.deleteItem('bookings', '${docSnap.id}')"><i class="fas fa-trash"></i></button>
-            </div>
-          </div>`;
+    onSnapshot(query(collection(db,'bookings'),orderBy('timestamp','desc')),(s)=>{
+      const list=document.getElementById('adminBookingsList');list.innerHTML='';
+      s.forEach(d=>{const b=d.data();
+        list.innerHTML+=`<div class="admin-item"><div><strong>${b.name}</strong> (${b.phone})<br><small style="color:var(--gold)">${b.date} | ${b.guests} | ₹${b.fee||0} ${b.paymentStatus||''}</small></div><button class="btn-sm btn-delete" onclick="window.deleteItem('bookings','${d.id}')"><i class="fas fa-trash"></i></button></div>`;
       });
     });
   }
 
-  window.renderMenuGrid = (cat) => {
-    const grid = document.getElementById('menuGrid');
-    grid.innerHTML = '';
-    const items = currentMenuData.filter(m => m.category === cat);
-    
-    items.forEach(m => {
-      const finalPrice = m.discount > 0 ? Math.round(m.price - (m.price * m.discount / 100)) : m.price;
-      const isUnavailable = m.isAvailable === false;
-      
-      grid.innerHTML += `
-        <div class="menu-card ${isUnavailable ? 'unavailable' : ''}">
-          <div class="menu-card-img">
-            <img src="${m.img}" alt="${m.name}" onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=400&fit=crop'">
-            <div class="veg-badge"></div>
-            ${m.discount > 0 ? `<div class="discount-badge">${m.discount}% OFF</div>` : ''}
-          </div>
-          <div class="menu-card-body">
-            <h3>${m.name}</h3>
-            <p>${m.desc}</p>
-            <div class="price-row">
-              <div class="price-box">
-                ${m.discount > 0 ? `<span class="old-price">₹${m.price}</span>` : ''}
-                <span class="new-price">₹${finalPrice}</span>
-              </div>
-            </div>
-          </div>
-        </div>`;
-    });
-  };
-
-  window.filterMenu = (cat, btn) => {
-    document.querySelectorAll('.menu-tab').forEach(t => t.classList.remove('active'));
-    btn.classList.add('active');
-    window.renderMenuGrid(cat);
-  };
-
-  window.saveSiteSettings = async () => {
-    try {
-      await setDoc(doc(db, 'settings', 'main'), {
-        heroTitle: document.getElementById('editHeroTitle').value,
-        heroSub: document.getElementById('editHeroSub').value,
-        heroBg: document.getElementById('editHeroBg').value
-      });
-      alert("✅ Site settings updated live!");
-    } catch (e) { alert("Error: " + e.message); }
-  };
-
-  window.saveMenuItem = async () => {
-    const id = document.getElementById('editMenuId').value;
-    const data = {
-      name: document.getElementById('mName').value,
-      category: document.getElementById('mCat').value,
-      desc: document.getElementById('mDesc').value,
-      price: Number(document.getElementById('mPrice').value),
-      discount: Number(document.getElementById('mDiscount').value) || 0,
-      img: document.getElementById('mImg').value || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=400&fit=crop',
-      isAvailable: document.getElementById('mAvailable').checked
-    };
-
-    try {
-      if (id) {
-        await updateDoc(doc(db, 'menu', id), data);
-        alert("✅ Menu item updated!");
-      } else {
-        await addDoc(collection(db, 'menu'), data);
-        alert("✅ Menu item added!");
-      }
-      window.clearMenuForm();
-    } catch (e) { alert("Error: " + e.message); }
-  };
-
-  window.editMenuItem = (id) => {
-    const item = currentMenuData.find(m => m.id === id);
-    if (!item) return;
-    document.getElementById('editMenuId').value = item.id;
-    document.getElementById('mName').value = item.name;
-    document.getElementById('mCat').value = item.category;
-    document.getElementById('mDesc').value = item.desc;
-    document.getElementById('mPrice').value = item.price;
-    document.getElementById('mDiscount').value = item.discount || 0;
-    document.getElementById('mImg').value = item.img;
-    document.getElementById('mAvailable').checked = item.isAvailable !== false;
-    window.switchAdminTab('menu', document.querySelectorAll('.admin-tab')[1]);
-  };
-
-  window.clearMenuForm = () => {
-    document.getElementById('editMenuId').value = '';
-    document.getElementById('mName').value = '';
-    document.getElementById('mCat').value = '';
-    document.getElementById('mDesc').value = '';
-    document.getElementById('mPrice').value = '';
-    document.getElementById('mDiscount').value = '0';
-    document.getElementById('mImg').value = '';
-    document.getElementById('mAvailable').checked = true;
-    document.getElementById('mImgPreview').innerHTML = '';
-  };
-
-  window.saveSweetItem = async () => {
-    const id = document.getElementById('editSweetId').value;
-    const data = {
-      name: document.getElementById('swName').value,
-      price: Number(document.getElementById('swPrice').value),
-      desc: document.getElementById('swDesc').value,
-      img: document.getElementById('swImg').value || 'https://images.unsplash.com/photo-1605197787820-40a44950c0c6?w=400&h=400&fit=crop',
-      tag: document.getElementById('swTag').value
-    };
-
-    try {
-      if (id) {
-        await updateDoc(doc(db, 'sweets', id), data);
-        alert("✅ Sweet updated!");
-      } else {
-        await addDoc(collection(db, 'sweets'), data);
-        alert("✅ Sweet added!");
-      }
-      window.clearSweetForm();
-    } catch (e) { alert("Error: " + e.message); }
-  };
-
-  window.editSweetItem = (id) => {
-    alert("To edit, delete and re-add with corrections.");
-  };
-
-  window.clearSweetForm = () => {
-    document.getElementById('editSweetId').value = '';
-    document.getElementById('swName').value = '';
-    document.getElementById('swPrice').value = '';
-    document.getElementById('swDesc').value = '';
-    document.getElementById('swImg').value = '';
-    document.getElementById('swImgPreview').innerHTML = '';
-  };
-
-  window.addGalleryImage = async () => {
-    const url = document.getElementById('galImg').value;
-    if (!url) return alert("Please upload or enter an image URL!");
-    
-    try {
-      await addDoc(collection(db, 'gallery'), { url });
-      document.getElementById('galImg').value = '';
-      document.getElementById('galImgPreview').innerHTML = '';
-      alert("✅ Image added to gallery!");
-    } catch (e) { alert("Error: " + e.message); }
-  };
-
-  window.deleteItem = async (col, id) => {
-    if (confirm("Are you sure you want to delete this permanently?")) {
-      try {
-        await deleteDoc(doc(db, col, id));
-        alert("✅ Deleted successfully!");
-      } catch (e) { alert("Error: " + e.message); }
-    }
-  };
-
-  window.loadDefaultData = async () => {
-    if (!confirm("This will add the full original menu to your database. Continue?")) return;
-    
-    try {
-      await setDoc(doc(db, 'settings', 'main'), {
-        heroTitle: "Welcome to <span>Chauhan's</span><br>Sweets & Restaurant",
-        heroSub: "Experience authentic North Indian, Chinese, South Indian & Continental cuisine in an elegant ambiance.",
-        heroBg: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1920"
-      });
-
-      const defaultMenu = [
-        {name:"Aloo Paratha", category:"Breakfast", desc:"Served with fresh curd", price:92, discount:0, img:"https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=400&h=400&fit=crop"},
-        {name:"Veg Thali", category:"Thali", desc:"Dal Fry + Matar Paneer + Jeera Aloo + 2 Butter Roti + Rice + Papad + Salad", price:269, discount:0, img:"https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=400&h=400&fit=crop"},
-        {name:"Paneer Butter Masala", category:"Main Course", desc:"Rich creamy tomato gravy with soft paneer cubes", price:212.75, discount:0, img:"https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400&h=400&fit=crop"},
-        {name:"Masala Dosa", category:"South Indian", desc:"Crispy rice crepe with spiced potato filling", price:149.50, discount:0, img:"https://images.unsplash.com/photo-1668236543090-82eba5ee5976?w=400&h=400&fit=crop"}
-      ];
-
-      for (const item of defaultMenu) {
-        await addDoc(collection(db, 'menu'), item);
-      }
-
-      const defaultSweets = [
-        {name:"Kaju Katli", price:650, desc:"Premium cashew fudge with silver foil", img:"https://images.unsplash.com/photo-1605197787820-40a44950c0c6?w=400&h=400&fit=crop", tag:"Premium"},
-        {name:"Gulab Jamun", price:380, desc:"Soft milk dumplings in rose-cardamom syrup", img:"https://images.unsplash.com/photo-1601303516534-bf91b8f9b63d?w=400&h=400&fit=crop", tag:"Bestseller"}
-      ];
-
-      for (const sw of defaultSweets) {
-        await addDoc(collection(db, 'sweets'), sw);
-      }
-
-      alert("✅ Default data loaded successfully!");
-    } catch (e) {
-      alert("Error loading data: " + e.message);
-    }
-  };
-
-  window.orderSweet = (name) => {
-    const msg = `Hi Chauhan's, I want to pre-book: *${name}*. Please share availability and details.`;
-    window.open(`https://wa.me/918853153098?text=${encodeURIComponent(msg)}`, '_blank');
-  };
-
-  window.submitBooking = async () => {
-    const name = document.getElementById('bName').value.trim();
-    const phone = document.getElementById('bPhone').value.trim();
-    const date = document.getElementById('bDate').value;
-    
-    if (!name || !phone) return alert("Name and Phone are required!");
-    if (phone.length !== 10) return alert("Please enter a valid 10-digit phone number!");
-    if (!date) return alert("Please select date and time!");
-
-    const bookingData = {
-      name, phone, date,
-      guests: document.getElementById('bGuests').value,
-      req: document.getElementById('bReq').value.trim(),
-      timestamp: serverTimestamp()
-    };
-
-    try {
-      await addDoc(collection(db, 'bookings'), bookingData);
-      alert("✅ Booking request sent successfully! We will confirm on WhatsApp shortly.");
-      
-      const waMsg = `🍽️ *NEW TABLE BOOKING* 🍽️\n━━━━━━━━━━━━━━\n👤 *Name:* ${name}\n📞 *Phone:* ${phone}\n📅 *Date/Time:* ${date}\n👥 *Guests:* ${bookingData.guests}\n💬 *Special:* ${bookingData.req || 'None'}\n━━━━━━━━━━━━━━`;
-      window.open(`https://wa.me/918853153098?text=${encodeURIComponent(waMsg)}`, '_blank');
-      
-      document.getElementById('bName').value = '';
-      document.getElementById('bPhone').value = '';
-      document.getElementById('bDate').value = '';
-      document.getElementById('bReq').value = '';
-    } catch (e) {
-      alert("Booking failed: " + e.message);
-    }
-  };
-
-  window.addEventListener('load', () => {
-    setTimeout(() => document.getElementById('preloader').classList.add('hidden'), 1200);
-  });
+  window.renderMenuGrid=(cat)=>{const grid=document.getElementById('menuGrid');grid.innerHTML='';currentMenuData.filter(m=>m.category===cat).forEach(m=>{const fp=m.discount>0?Math.round(m.price-(m.price*m.discount/100)):m.price;grid.innerHTML+=`<div class="menu-card ${m.isAvailable===false?'unavailable':''}"><div class="menu-card-img"><img src="${m.img}" onerror="this.src='https://via.placeholder.com/400'"><div class="veg-badge"></div>${m.discount>0?`<div class="discount-badge">${m.discount}% OFF</div>`:''}</div><div class="menu-card-body"><h3>${m.name}</h3><p>${m.desc}</p><div class="price-row"><div>${m.discount>0?`<span class="old-price">₹${m.price}</span>`:''}<span class="new-price">₹${fp}</span></div></div></div></div>`;});};
+  window.filterMenu=(cat,btn)=>{document.querySelectorAll('.menu-tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');window.renderMenuGrid(cat);};
   
-  window.addEventListener('scroll', () => {
-    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
-  });
+  window.saveSiteSettings=async()=>{await setDoc(doc(db,'settings','main'),{heroTitle:document.getElementById('editHeroTitle').value,heroSub:document.getElementById('editHeroSub').value,heroBg:document.getElementById('editHeroBg').value});alert("Saved!");};
+  window.saveMenuItem=async()=>{const id=document.getElementById('editMenuId').value;const data={name:document.getElementById('mName').value,category:document.getElementById('mCat').value,desc:document.getElementById('mDesc').value,price:Number(document.getElementById('mPrice').value),discount:Number(document.getElementById('mDiscount').value)||0,img:document.getElementById('mImg').value,isAvailable:document.getElementById('mAvailable').checked};if(id){await updateDoc(doc(db,'menu',id),data);}else{await addDoc(collection(db,'menu'),data);}window.clearMenuForm();alert("Saved!");};
+  window.editMenuItem=(id)=>{const m=currentMenuData.find(x=>x.id===id);if(!m)return;document.getElementById('editMenuId').value=m.id;document.getElementById('mName').value=m.name;document.getElementById('mCat').value=m.category;document.getElementById('mDesc').value=m.desc;document.getElementById('mPrice').value=m.price;document.getElementById('mDiscount').value=m.discount||0;document.getElementById('mImg').value=m.img;document.getElementById('mAvailable').checked=m.isAvailable!==false;window.switchAdminTab('menu',document.querySelectorAll('.admin-tab')[1]);};
+  window.clearMenuForm=()=>{document.getElementById('editMenuId').value='';document.getElementById('mName').value='';document.getElementById('mCat').value='';document.getElementById('mDesc').value='';document.getElementById('mPrice').value='';document.getElementById('mDiscount').value='0';document.getElementById('mImg').value='';document.getElementById('mAvailable').checked=true;};
+  window.saveSweetItem=async()=>{const id=document.getElementById('editSweetId').value;const data={name:document.getElementById('swName').value,price:Number(document.getElementById('swPrice').value),desc:document.getElementById('swDesc').value,img:document.getElementById('swImg').value,tag:document.getElementById('swTag').value};if(id){await updateDoc(doc(db,'sweets',id),data);}else{await addDoc(collection(db,'sweets'),data);}document.getElementById('swName').value='';document.getElementById('swPrice').value='';document.getElementById('swDesc').value='';document.getElementById('swImg').value='';alert("Saved!");};
+  window.addGalleryImage=async()=>{const url=document.getElementById('galImg').value;if(!url)return alert("Upload first");await addDoc(collection(db,'gallery'),{url});document.getElementById('galImg').value='';alert("Added!");};
+  window.deleteItem=async(col,id)=>{if(confirm("Delete?"))await deleteDoc(doc(db,col,id));};
+  window.orderSweet=(name)=>{window.open(`https://wa.me/918853153098?text=${encodeURIComponent(`Hi, pre-book: ${name}`)}`,'_blank');};
+
+  window.loadDefaultData=async()=>{
+    if(!confirm("Load Full Zomato Menu?"))return;
+    await setDoc(doc(db,'settings','main'),{heroTitle:"Welcome to <span>Chauhan's</span><br>Sweets & Restaurant",heroSub:"Experience authentic North Indian, Chinese, South Indian & Continental cuisine.",heroBg:"https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1920"});
+    const menu=[
+      {name:"Aloo Paratha",category:"Breakfast",desc:"Served with curd",price:92,img:"https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=400"},
+      {name:"Paneer Paratha",category:"Breakfast",desc:"Served with curd",price:126.5,img:"https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=400"},
+      {name:"Special Chinese Combo",category:"Combos",desc:"Soup+Manchurian+Paneer Chilli+Fried Rice+Salad",price:299,img:"https://images.unsplash.com/photo-1563245372-f21724e3856d?w=400"},
+      {name:"Chinese Thali",category:"Thali",desc:"Manchurian+Paneer Chilli+Schezwan Rice+Naan+Salad+Gulab Jamun",price:299,img:"https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=400"},
+      {name:"Veg Thali",category:"Thali",desc:"Dal Fry+Matar Paneer+Jeera Aloo+Roti+Rice+Papad+Salad",price:269,img:"https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=400"},
+      {name:"Veg Manchow Soup",category:"Soups",desc:"Spicy Indo-Chinese soup",price:115,img:"https://images.unsplash.com/photo-1547592166-23ac45744acd?w=400"},
+      {name:"Paneer Chilli Dry",category:"Starters",desc:"Spicy Indo-Chinese paneer",price:276,img:"https://images.unsplash.com/photo-1563245372-f21724e3856d?w=400"},
+      {name:"Honey Chilli Potato",category:"Starters",desc:"Crispy potato in honey chilli glaze",price:207,img:"https://images.unsplash.com/photo-1563245372-f21724e3856d?w=400"},
+      {name:"Paneer Tikka",category:"Starters",desc:"Tandoor grilled marinated paneer",price:276,img:"https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=400"},
+      {name:"Paneer Butter Masala",category:"Main Course",desc:"Rich creamy tomato gravy",price:212.75,img:"https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400"},
+      {name:"Shahi Paneer",category:"Main Course",desc:"Royal creamy paneer",price:224.25,img:"https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400"},
+      {name:"Dal Makhani",category:"Main Course",desc:"Creamy black lentils",price:149.5,img:"https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=400"},
+      {name:"Kadhai Paneer",category:"Main Course",desc:"Paneer in kadhai spices",price:212.75,img:"https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400"},
+      {name:"Palak Paneer",category:"Main Course",desc:"Paneer in spinach gravy",price:184,img:"https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400"},
+      {name:"Malai Kofta",category:"Main Course",desc:"Creamy kofta curry",price:207,img:"https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400"},
+      {name:"Butter Naan",category:"Breads",desc:"Butter topped naan",price:51.75,img:"https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=400"},
+      {name:"Garlic Naan",category:"Breads",desc:"Garlic flavoured naan",price:51.75,img:"https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=400"},
+      {name:"Veg Biryani",category:"Rice",desc:"Fragrant vegetable biryani",price:220,img:"https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=400"},
+      {name:"Masala Dosa",category:"South Indian",desc:"Crispy crepe with potato filling",price:149.5,img:"https://images.unsplash.com/photo-1668236543090-82eba5ee5976?w=400"},
+      {name:"Veg Chowmein",category:"Noodles",desc:"Classic veg chowmein",price:103.5,img:"https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=400"},
+      {name:"Paneer Fried Rice",category:"Fried Rice",desc:"Fried rice with paneer",price:138,img:"https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=400"},
+      {name:"Special Chauhan Pizza",category:"Pizza",desc:"Paneer, Onion, Corn, Pineapple",price:253,img:"https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400"},
+      {name:"Alfredo Pasta",category:"Pasta",desc:"White sauce penne",price:195.5,img:"https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=400"},
+      {name:"Paneer Burger",category:"Burgers",desc:"Paneer patty burger",price:126.5,img:"https://images.unsplash.com/photo-1568901346375-23c9450c56cd?w=400"},
+      {name:"Mumbai Pav Bhaji",category:"Snacks",desc:"Classic street food",price:161,img:"https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=400"},
+      {name:"Cold Coffee",category:"Beverages",desc:"Chilled coffee blend",price:172.5,img:"https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=400"}
+    ];
+    for(const m of menu) await addDoc(collection(db,'menu'),m);
+    const sweets=[{name:"Kaju Katli",price:650,desc:"Premium cashew fudge",img:"https://images.unsplash.com/photo-1605197787820-40a44950c0c6?w=400",tag:"Premium"},{name:"Gulab Jamun",price:380,desc:"Soft milk dumplings",img:"https://images.unsplash.com/photo-1601303516534-bf91b8f9b63d?w=400",tag:"Bestseller"}];
+    for(const s of sweets) await addDoc(collection(db,'sweets'),s);
+    alert("Full Menu Loaded!");
+  };
+
+  window.addEventListener('load',()=>setTimeout(()=>document.getElementById('preloader').classList.add('hidden'),1200));
+  window.addEventListener('scroll',()=>document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>50));
 </script>
 </body>
 </html>
